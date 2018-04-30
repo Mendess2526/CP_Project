@@ -43,7 +43,7 @@ multip a = cataNat (either (const 0) (a+))       -- for (a+) 0
 
 exp a = cataNat (either (const 1) (a*))          -- for (a*) 1
 
--- (4.2) sq (square of a natural number) 
+-- (4.2) sq (square of a natural number)
 
 sq 0 = 0
 sq (n+1) = oddn n + sq n where oddn n = 2*n+1
@@ -62,7 +62,7 @@ sq'' n  = -- the same as a for loop (putting variables in)
 -- (4.3) factorial
 
 fac = p2. facfor
-facfor = for (split (succ.p1) mul) (1,1) 
+facfor = for (split (succ.p1) mul) (1,1)
 
 -- factorial = paraNat (either (const 1) g) where g(n,r) = (n+1) * r
 
@@ -76,7 +76,7 @@ x `wdiv` y  |   x <  y    = 0
 
 idiv = flip aux
 
-aux y = anaNat divide where 
+aux y = anaNat divide where
            divide x | x <  y  = i1 ()
                     | x >= y  = i2 (x - y)
 
@@ -90,7 +90,7 @@ bSort xs = for bubble xs (length xs) where
 
 --- (5) While loop -------------------------------------
 
-{-- pointwise 
+{-- pointwise
 
 while p f x | not (p x) = x
               | otherwise = while p f (f x)
