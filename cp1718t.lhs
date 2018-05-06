@@ -107,11 +107,11 @@
 \begin{tabular}{ll}
 \textbf{Grupo} nr. & 99 (preencher)
 \\\hline
-a11111 & Nome1 (preencher)	
+a79003 & Pedro Mendes Félix da Costa
 \\
-a22222 & Nome2 (preencher)	
+a22222 & Nome2 (preencher)
 \\
-a33333 & Nome3 (preencher)	
+a33333 & Nome3 (preencher)
 \end{tabular}
 \end{center}
 
@@ -123,10 +123,10 @@ parte-se de um repertório de \emph{combinadores} que formam uma álgebra da
 programação (conjunto de leis universais e seus corolários) e usam-se esses
 combinadores para construir programas \emph{composicionalmente}, isto é,
 agregando programas já existentes.
-  
+
 Na sequência pedagógica dos planos de estudo dos dois cursos que têm esta
 disciplina, restringe-se a aplicação deste método à programação funcional
-em \Haskell. Assim, 
+em \Haskell. Assim,
 o presente trabalho prático coloca os alunos perante problemas
 concretos que deverão ser implementados em \Haskell.
 Há ainda um outro objectivo: o de ensinar a documentar programas e
@@ -168,7 +168,7 @@ o ``kit'' básico, escrito em \Haskell, para realizar o trabalho. Basta executar
 {-# LANGUAGE GeneralizedNewtypeDeriving, DeriveDataTypeable #-}
 import Cp
 import List  hiding (fac)
-import Nat  
+import Nat
 import Probability hiding (cond)
 import BMP
 
@@ -234,7 +234,7 @@ Para testar uma propriedade \QuickCheck~|prop|, basta invocá-la com o comando:
 
 \section*{Problema 1}
 
-Segundo uma \href{https://www.jn.pt/economia/interior/compra-diaria-de-bitcoins-iguala-acoes-da-apple-9257302.html}{notícia do Jornal de Notícias}, 
+Segundo uma \href{https://www.jn.pt/economia/interior/compra-diaria-de-bitcoins-iguala-acoes-da-apple-9257302.html}{notícia do Jornal de Notícias},
 referente ao dia 12 de abril, \emph{``apenas numa hora, foram transacionadas 1.2 mil milhões de dólares em bitcoins. Nas últimas 24 horas, foram transacionados 8,5 mil milhões de dólares, num total de 24 mil milhões de dólares referentes às principais criptomoedas''}.
 
 De facto, é inquestionável que as criptomoedas, e em particular as bitcoin, vieram para ficar.
@@ -256,7 +256,7 @@ tal como no código seguinte:
 type Block = (MagicNo, (Time, Transactions))
 \end{spec}
 
-Cada \href{https://en.bitcoin.it/wiki/Transaction}{transação} 
+Cada \href{https://en.bitcoin.it/wiki/Transaction}{transação}
 define a entidade de origem da transferência, o valor a ser transacionado,
 e a entidade destino (por esta ordem), tal como se define de seguida.
 
@@ -416,7 +416,7 @@ bm2qt = anaQTree f where
      where  x = (nub . toList) m
             u = (head x,(ncols m,nrows m))
             one = (ncols m == 1 || nrows m == 1 || length x == 1)
-            (a,b,c,d) = splitBlocks (nrows m `div` 2) (ncols m `div` 2) m    
+            (a,b,c,d) = splitBlocks (nrows m `div` 2) (ncols m `div` 2) m
 \end{code}
 \endgroup
 \end{minipage}} %
@@ -528,7 +528,7 @@ O módulo |BMP|, disponibilizado juntamente com o enunciado, fornece funções p
 Teste, por exemplo, no |GHCi|, carregar a Figura~\ref{fig:person}:
 \begin{verbatim}
     > readBMP "cp1718t_media/person.bmp"
-\end{verbatim} 
+\end{verbatim}
 
 Esta questão aborda operações de processamento de imagens utilizando quadtrees:
 \begin{enumerate}
@@ -568,7 +568,7 @@ prop2d (Nat s) = sizeQTree . scaleQTree s .==. ((s*) >< (s*)) . sizeQTree
 prop2e = shapeQTree . invertQTree .==. shapeQTree
 \end{code}
 \end{propriedade}
-    
+
     \item Defina a função |compressQTree :: Int -> QTree a -> QTree a|, utilizando catamorfismos e/ou anamorfismos, que comprime uma quadtree cortando folhas da árvore para reduzir a sua profundidade num dado número de níveis.
     Tente produzir imagens similares (mas não necessariamente iguais) às Figuras~\ref{fig:person1}, \ref{fig:person2}, \ref{fig:person3} e \ref{fig:person4}:
 %if False
@@ -589,7 +589,7 @@ prop2f :: Nat -> QTree Int -> Bool
 prop2f (Nat n) = depthQTree . compressQTree n .==. (`minusNat` n) . depthQTree
 \end{code}
     \end{propriedade}
-    
+
 
     \item Defina a função |outlineQTree :: (a -> Bool) -> QTree a -> Matrix Bool|, utilizando catamorfismos e/ou anamorfismos, que recebe uma função que determina quais os píxeis de fundo e converte uma quadtree numa matriz monocromática, de forma a desenhar o contorno de uma \href{https://en.wikipedia.org/wiki/Polygon_mesh}{malha poligonal} contida na imagem.
         Tente produzir imagens similares (mas não necessariamente iguais) às Figuras~\ref{fig:personOut1} e \ref{fig:personOut2}:
@@ -616,7 +616,7 @@ prop2g = sizeQTree .==. sizeMatrix . outlineQTree (<0)
     \begin{teste}
         Contorno da quadtree de exemplo |qt|:
 \begin{code}
-teste2a = outlineQTree (==0) qt == qtOut 
+teste2a = outlineQTree (==0) qt == qtOut
 \end{code}
     \end{teste}
 
@@ -626,7 +626,7 @@ teste2a = outlineQTree (==0) qt == qtOut
 O cálculo das combinações de |n| |k|-a-|k|,
 \begin{eqnarray}
 	|bin n k = frac (fac n)(fac k * (fac ((n-k))))|
-	\label{eq:bin} 
+	\label{eq:bin}
 \end{eqnarray}
 envolve três factoriais. Recorrendo à \material{lei de recursividade múltipla} do cálculo
 de programas, é possível escrever o mesmo programa como um simples ciclo-for
@@ -642,7 +642,7 @@ onde
 \more
        |f k d = frac (fac ((d+k))) (fac k)|
 \more
-       |g d = fac d| 
+       |g d = fac d|
 \end{eqnarray*}
 assumindo-se |d = n-k >=0|.
 %
@@ -654,7 +654,7 @@ f k (d+1) = underbrace ((d+k+1)) (l k d) * f k d
 l k 0 = k+1
 l k (d+1) = l k d + 1
 \end{spec}
-e 
+e
 \begin{spec}
 g 0 = 1
 g (d+1) = underbrace ((d+1)) (s d) * g d
@@ -742,7 +742,7 @@ animatePTree n = animate window white draw
     draw t = pics !! (floor (t/2))
 \end{code}
 %endif
-    
+
 \end{enumerate}
 
 \section*{Problema 5}
@@ -828,7 +828,7 @@ instance Monad Bag where
    return = singletonbag
 \end{code}
 \begin{enumerate}
-\item	
+\item
 Defina a função |muB| (multiplicação do mónade |Bag|) e a função auxiliar
 |singletonbag|.
 \item	Verifique-as com os seguintes testes unitários:
@@ -916,9 +916,9 @@ Funções para mostrar \emph{bags}:
 instance (Show a, Ord a, Eq a) => Show (Bag a) where
     show = showbag . consol . unB  where
        showbag = concat .
-                 (++ [" }"]) .  ("{ ":) . 
+                 (++ [" }"]) .  ("{ ":) .
                  (intersperse " , ") .
-                 sort . 
+                 sort .
                  (map f) where f(a,b) = (show a) ++ " |-> " ++ (show b)
 unB (B x) = x
 \end{code}
@@ -968,20 +968,21 @@ consolidate = B . consol . unB
 \section{Soluções dos alunos}\label{sec:resolucao}
 Os alunos devem colocar neste anexo as suas soluções aos exercícios
 propostos, de acordo com o ``layout'' que se fornece. Não podem ser
-alterados os nomes ou tipos das funções dadas, mas pode ser adicionado texto e / ou 
+alterados os nomes ou tipos das funções dadas, mas pode ser adicionado texto e / ou
 outras funções auxiliares que sejam necessárias.
 
 \subsection*{Problema 1}
 
 \begin{code}
-inBlockchain = undefined
-outBlockchain = undefined
-recBlockchain = undefined    
-cataBlockchain = undefined     
-anaBlockchain = undefined
-hyloBlockchain = undefined
+inBlockchain          = either Bc Bcs
+outBlockchain (Bc a)  = i1 a
+outBlockchain (Bcs a) = i2 a
+recBlockchain f       = id -|- id >< f
+cataBlockchain g      = g . recBlockchain (cataBlockchain g) . outBlockchain
+anaBlockchain h       = inBlockchain . recBlockchain (anaBlockchain h) . h
+hyloBlockchain h g    = cataBlockchain h . anaBlockchain g
 
-allTransactions = undefined
+allTransactions = cataBlockchain (either (p2.p2) (conc.((p2.p2) >< id)))
 ledger = undefined
 isValidMagicNr = undefined
 \end{code}
