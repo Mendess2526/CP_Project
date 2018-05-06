@@ -107,7 +107,7 @@
 \begin{tabular}{ll}
 \textbf{Grupo} nr. & 99 (preencher)
 \\\hline
-a11111 & Nome1 (preencher)	
+a79003 & Pedro Mendes Félix da Costa
 \\
 a22222 & Nome2 (preencher)	
 \\
