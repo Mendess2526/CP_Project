@@ -297,11 +297,11 @@
 \begin{tabular}{ll}
 \textbf{Grupo} nr. & 99 (preencher)
 \\\hline
-a11111 & Nome1 (preencher)	
+a79003 & Pedro Mendes Félix da Costa
 \\
-a22222 & Nome2 (preencher)	
+a22222 & Nome2 (preencher)
 \\
-a33333 & Nome3 (preencher)	
+a33333 & Nome3 (preencher)
 \end{tabular}
 \end{center}
 
@@ -313,10 +313,10 @@ parte-se de um repertório de \emph{combinadores} que formam uma álgebra da
 programação (conjunto de leis universais e seus corolários) e usam-se esses
 combinadores para construir programas \emph{composicionalmente}, isto é,
 agregando programas já existentes.
-  
+
 Na sequência pedagógica dos planos de estudo dos dois cursos que têm esta
 disciplina, restringe-se a aplicação deste método à programação funcional
-em \Haskell. Assim, 
+em \Haskell. Assim,
 o presente trabalho prático coloca os alunos perante problemas
 concretos que deverão ser implementados em \Haskell.
 Há ainda um outro objectivo: o de ensinar a documentar programas e
@@ -399,7 +399,7 @@ Para testar uma propriedade \QuickCheck~\ensuremath{\Varid{prop}}, basta invocá
 
 \section*{Problema 1}
 
-Segundo uma \href{https://www.jn.pt/economia/interior/compra-diaria-de-bitcoins-iguala-acoes-da-apple-9257302.html}{notícia do Jornal de Notícias}, 
+Segundo uma \href{https://www.jn.pt/economia/interior/compra-diaria-de-bitcoins-iguala-acoes-da-apple-9257302.html}{notícia do Jornal de Notícias},
 referente ao dia 12 de abril, \emph{``apenas numa hora, foram transacionadas 1.2 mil milhões de dólares em bitcoins. Nas últimas 24 horas, foram transacionados 8,5 mil milhões de dólares, num total de 24 mil milhões de dólares referentes às principais criptomoedas''}.
 
 De facto, é inquestionável que as criptomoedas, e em particular as bitcoin, vieram para ficar.
@@ -432,7 +432,7 @@ tal como no código seguinte:
 \ColumnHook
 \end{hscode}\resethooks
 
-Cada \href{https://en.bitcoin.it/wiki/Transaction}{transação} 
+Cada \href{https://en.bitcoin.it/wiki/Transaction}{transação}
 define a entidade de origem da transferência, o valor a ser transacionado,
 e a entidade destino (por esta ordem), tal como se define de seguida.
 
@@ -797,7 +797,7 @@ Esta questão aborda operações de processamento de imagens utilizando quadtree
 \ColumnHook
 \end{hscode}\resethooks
 \end{propriedade}
-    
+
     \item Defina a função \ensuremath{\Varid{compressQTree}\mathbin{::}\Conid{Int}\to \Conid{QTree}\;\Varid{a}\to \Conid{QTree}\;\Varid{a}}, utilizando catamorfismos e/ou anamorfismos, que comprime uma quadtree cortando folhas da árvore para reduzir a sua profundidade num dado número de níveis.
     Tente produzir imagens similares (mas não necessariamente iguais) às Figuras~\ref{fig:person1}, \ref{fig:person2}, \ref{fig:person3} e \ref{fig:person4}:
         \begin{tabbing}\ttfamily
@@ -815,7 +815,7 @@ Esta questão aborda operações de processamento de imagens utilizando quadtree
 \ColumnHook
 \end{hscode}\resethooks
     \end{propriedade}
-    
+
 
     \item Defina a função \ensuremath{\Varid{outlineQTree}\mathbin{::}(\Varid{a}\to \Conid{Bool})\to \Conid{QTree}\;\Varid{a}\to \Conid{Matrix}\;\Conid{Bool}}, utilizando catamorfismos e/ou anamorfismos, que recebe uma função que determina quais os píxeis de fundo e converte uma quadtree numa matriz monocromática, de forma a desenhar o contorno de uma \href{https://en.wikipedia.org/wiki/Polygon_mesh}{malha poligonal} contida na imagem.
         Tente produzir imagens similares (mas não necessariamente iguais) às Figuras~\ref{fig:personOut1} e \ref{fig:personOut2}:
@@ -848,7 +848,7 @@ Esta questão aborda operações de processamento de imagens utilizando quadtree
 O cálculo das combinações de \ensuremath{\Varid{n}} \ensuremath{\Varid{k}}-a-\ensuremath{\Varid{k}},
 \begin{eqnarray}
 	\ensuremath{\Big(\vcenter{\xymatrix@R=1pt{\Varid{n}\\\Varid{k}}}\Big)\mathrel{=}\frac{{\Varid{n}!}}{{\Varid{k}!}\mathbin{*}{(\Varid{n}\mathbin{-}\Varid{k})!}}}
-	\label{eq:bin} 
+	\label{eq:bin}
 \end{eqnarray}
 envolve três factoriais. Recorrendo à \material{lei de recursividade múltipla} do cálculo
 de programas, é possível escrever o mesmo programa como um simples ciclo-for
@@ -864,7 +864,7 @@ onde
 \more
        \ensuremath{\Varid{f}\;\Varid{k}\;\Varid{d}\mathrel{=}\frac{{(\Varid{d}\mathbin{+}\Varid{k})!}}{{\Varid{k}!}}}
 \more
-       \ensuremath{\Varid{g}\;\Varid{d}\mathrel{=}{\Varid{d}!}} 
+       \ensuremath{\Varid{g}\;\Varid{d}\mathrel{=}{\Varid{d}!}}
 \end{eqnarray*}
 assumindo-se \ensuremath{\Varid{d}\mathrel{=}\Varid{n}\mathbin{-}\Varid{k}\geq \mathrm{0}}.
 %
@@ -881,7 +881,7 @@ assumindo-se \ensuremath{\Varid{d}\mathrel{=}\Varid{n}\mathbin{-}\Varid{k}\geq \
 \>[B]{}\Varid{l}\;\Varid{k}\;(\Varid{d}\mathbin{+}\mathrm{1})\mathrel{=}\Varid{l}\;\Varid{k}\;\Varid{d}\mathbin{+}\mathrm{1}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
-e 
+e
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -973,7 +973,7 @@ Uma árvore de Pitágoras pode ser codificada em Haskell como uma full tree cont
 ~~~~~\char62{}~animatePTree~3
 \end{tabbing}
 
-    
+
 \end{enumerate}
 
 \section*{Problema 5}
@@ -1094,7 +1094,7 @@ Partindo da seguinte declaração de \ensuremath{\Conid{Bag}} como um functor e 
 \ColumnHook
 \end{hscode}\resethooks
 \begin{enumerate}
-\item	
+\item
 Defina a função \ensuremath{\mu } (multiplicação do mónade \ensuremath{\Conid{Bag}}) e a função auxiliar
 \ensuremath{\Varid{singletonbag}}.
 \item	Verifique-as com os seguintes testes unitários:
@@ -1297,31 +1297,69 @@ Outras funções auxiliares:
 \section{Soluções dos alunos}\label{sec:resolucao}
 Os alunos devem colocar neste anexo as suas soluções aos exercícios
 propostos, de acordo com o ``layout'' que se fornece. Não podem ser
-alterados os nomes ou tipos das funções dadas, mas pode ser adicionado texto e / ou 
+alterados os nomes ou tipos das funções dadas, mas pode ser adicionado texto e / ou
 outras funções auxiliares que sejam necessárias.
 
 \subsection*{Problema 1}
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{23}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{30}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{33}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{42}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{inBlockchain}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{inBlockchain}{}\<[23]%
+\>[23]{}\mathrel{=}\alt{\Conid{Bc}}{\Conid{Bcs}}{}\<[E]%
 \\
-\>[B]{}\Varid{outBlockchain}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{outBlockchain}\;(\Conid{Bc}\;\Varid{a}){}\<[23]%
+\>[23]{}\mathrel{=}i_1\;\Varid{a}{}\<[E]%
 \\
-\>[B]{}\Varid{recBlockchain}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{outBlockchain}\;(\Conid{Bcs}\;\Varid{a})\mathrel{=}i_2\;\Varid{a}{}\<[E]%
 \\
-\>[B]{}\Varid{cataBlockchain}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{recBlockchain}\;\Varid{f}{}\<[23]%
+\>[23]{}\mathrel{=}\Varid{id}+\Varid{id}\times\Varid{f}{}\<[E]%
 \\
-\>[B]{}\Varid{anaBlockchain}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{cataBlockchain}\;\Varid{g}{}\<[23]%
+\>[23]{}\mathrel{=}\Varid{g}\comp \Varid{recBlockchain}\;(\Varid{cataBlockchain}\;\Varid{g})\comp \Varid{outBlockchain}{}\<[E]%
 \\
-\>[B]{}\Varid{hyloBlockchain}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{anaBlockchain}\;\Varid{h}{}\<[23]%
+\>[23]{}\mathrel{=}\Varid{inBlockchain}\comp \Varid{recBlockchain}\;(\Varid{anaBlockchain}\;\Varid{h})\comp \Varid{h}{}\<[E]%
+\\
+\>[B]{}\Varid{hyloBlockchain}\;\Varid{h}\;\Varid{g}{}\<[23]%
+\>[23]{}\mathrel{=}\Varid{cataBlockchain}\;\Varid{h}\comp \Varid{anaBlockchain}\;\Varid{g}{}\<[E]%
 \\[\blanklineskip]%
-\>[B]{}\Varid{allTransactions}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{allTransactions}\mathrel{=}\Varid{cataBlockchain}\;\alt{\p2\comp \p2}{\mathsf{conc}\comp ((\p2\comp \p2)\times\Varid{id})}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{normL}\;((\Varid{e},\Varid{v}),[\mskip1.5mu \mskip1.5mu]){}\<[30]%
+\>[30]{}\mathrel{=}[\mskip1.5mu (\Varid{e},\Varid{v})\mskip1.5mu]{}\<[E]%
 \\
-\>[B]{}\Varid{ledger}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{normL}\;((\Varid{e},\Varid{v}),((\Varid{el},\Varid{vl})\mathbin{:}\Varid{tl}))\mid \Varid{e}\equiv \Varid{el}{}\<[42]%
+\>[42]{}\mathrel{=}(\Varid{el},\Varid{v}\mathbin{+}\Varid{vl})\mathbin{:}\Varid{tl}{}\<[E]%
 \\
-\>[B]{}\Varid{isValidMagicNr}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\hsindent{30}{}\<[30]%
+\>[30]{}\mid \Varid{otherwise}\mathrel{=}(\Varid{el},\Varid{vl})\mathbin{:}(\Varid{normL}\;((\Varid{e},\Varid{v}),\Varid{tl})){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{normalizeL}\mathrel{=}\Varid{cataList}\;\alt{\Varid{nil}}{\Varid{normL}}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{t2l}\;(\Varid{f},(\Varid{v},\Varid{t}))\mathrel{=}[\mskip1.5mu (\Varid{f},\mathbin{-}\Varid{v}),(\Varid{t},\Varid{v})\mskip1.5mu]{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{ledger}\mathrel{=}\Varid{normalizeL}\comp (\Varid{cataList}\;\alt{\Varid{nil}}{\mathsf{conc}\comp (\Varid{t2l}\times\Varid{id})})\comp \Varid{allTransactions}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{magic}\mathrel{=}\Varid{cataBlockchain}\;\alt{\Varid{singl}\comp \p1}{\Varid{cons}\comp (\p1\times\Varid{id})}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{perfect}\mathrel{=}\alt{\Varid{true}}{\Varid{and}\comp \Varid{cons}\comp \conj{\uncurry{\Varid{notElem}}}{\Varid{singl}\comp \Varid{perfect}\comp \p2}}\comp \Varid{outList}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{isValidMagicNr}\mathrel{=}\Varid{perfect}\comp \Varid{magic}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{bloco1}\mathrel{=}\Conid{Bc}\;(\text{\ttfamily \char34 123\char34},(\mathrm{1234},[\mskip1.5mu \mskip1.5mu])){}\<[E]%
+\\
+\>[B]{}\Varid{bloco2}\mathrel{=}\Conid{Bc}\;(\text{\ttfamily \char34 124\char34},(\mathrm{12},[\mskip1.5mu (\text{\ttfamily \char34 Eu\char34},(\mathrm{70},\text{\ttfamily \char34 Bruno\char34}))\mskip1.5mu])){}\<[E]%
+\\
+\>[B]{}\Varid{blocolista}\mathrel{=}\Conid{Bcs}\;((\Varid{bc}\;\Varid{bloco1}),{}\<[33]%
+\>[33]{}\Varid{bloco2}){}\<[E]%
+\\
+\>[B]{}\Varid{blocoFDD}\mathrel{=}\Conid{Bcs}\;((\text{\ttfamily \char34 123\char34},(\mathrm{12},[\mskip1.5mu (\text{\ttfamily \char34 Bruno\char34},(\mathrm{10},\text{\ttfamily \char34 Fil\char34}))\mskip1.5mu])),\Varid{blocolista}){}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
