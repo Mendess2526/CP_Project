@@ -982,8 +982,28 @@ cataBlockchain g      = g . recBlockchain (cataBlockchain g) . outBlockchain
 anaBlockchain h       = inBlockchain . recBlockchain (anaBlockchain h) . h
 hyloBlockchain h g    = cataBlockchain h . anaBlockchain g
 
+-- bloco1 = Bc ("123", (1234, []))
+-- bloco2 = Bc ("124", (12, [("Eu", (70, "Bruno"))]))
+-- blocolista = Bcs ((bc bloco1),  bloco2)
+-- blocoFDD = Bcs (("465", (12, [("Bruno", (10, "Fil"))])), blocolista)
+
 allTransactions = cataBlockchain (either (p2.p2) (conc.((p2.p2) >< id)))
-ledger = undefined
+
+concL :: (Ledger, Ledger) -> Ledger
+concL ([], l)    = l
+concL ((h:t), l) = concL (t,(c h l))
+    where
+        c (e,v) [] = [(e,v)]
+        c (e,v) ((el, vl):tl) | e == el   = (el,v + vl) : tl
+                              | otherwise = (el, vl) : (c (e,v) tl)
+
+block2ledger = (cataList (either nil (concL.(t2l >< id)))).p2.p2
+
+t2l :: Transaction -> Ledger
+t2l (f,(v,t)) = [(f,-v),(t,v)]
+
+ledger = cataBlockchain (either block2ledger (concL.(block2ledger >< id)))
+
 isValidMagicNr = undefined
 \end{code}
 

@@ -3,13 +3,14 @@ file = cp1718t
 pdf: $(file).tex
 	pdflatex $(file).tex
 
-bib: 
+bib:
 	bibtex $(file)
 
 all: $(file).tex
 	lhs2TeX $(file).lhs > $(file).tex
 	pdflatex $(file).tex
-	#bibtex $(file)
+	bibtex $(file).aux
+	makeindex $(file).idx
 	#pdflatex $(file).tex
 	#pdflatex $(file).tex
 
@@ -19,7 +20,7 @@ rubber :
 	@rubber --pdf -f $(file)
 
 clean:
-	rm -rf *.aux *.log *.bbl *.bak *.ptb *.blg *.out *.spl 
+	rm -rf *.aux *.log *.bbl *.bak *.ptb *.blg *.out *.spl
 
 cleanall : clean
 	rm $(file).pdf
