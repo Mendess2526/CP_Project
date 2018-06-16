@@ -1020,13 +1020,11 @@ hyloQTree g f = cataQTree g . anaQTree f
 instance Functor QTree where
     fmap f = cataQTree ( inQTree . baseQTree f id)
 
-rotateQTree = cataQTree (either flipCell flipTrees)
-    where
+rotateQTree = cataQTree (either flipCell flipTrees) where
        flipCell = cell.(id >< swap)
        flipTrees (a, (b, (c, d))) = Block c a d b
 
-scaleQTree s = cataQTree (either scaleCell block)
-    where
+scaleQTree s = cataQTree (either scaleCell block) where
         scaleCell = cell.(id >< ((s*) >< (s*)))
 
 inPixel (r,(g,(b,a))) = PixelRGBA8 r g b a
@@ -1034,8 +1032,7 @@ outPixel (PixelRGBA8 r g b a) = (r,(g,(b,a)))
 invertQTree = fmap (inPixel.((255-) >< ((255-) >< ((255-) >< id))).outPixel)
 
 
-compressQTree n t = seek ((depthQTree t) - n) t
-    where
+compressQTree n t = seek ((depthQTree t) - n) t where
         seek n t | n < 1       = cell (destroy t)
         seek n (Cell a x y)    = (Cell a x y)
         seek n (Block a b c d) = Block (seek (n-1) a) (seek (n-1) b) (seek (n-1) c) (seek (n-1) d)
@@ -1044,8 +1041,7 @@ destroy :: QTree a -> (a,(Int, Int))
 destroy = cataQTree (either id (avgPixel.pair2list))
 
 avgPixel :: [(a,(Int,Int))] -> (a,(Int, Int))
-avgPixel = split avgColor avgSize
-    where
+avgPixel = split avgColor avgSize where
         avgColor = p1.head -- escolhe a primeira porque não tenho maneira de fazer a media
         avgSize = (split (divP.(split (p1.p2) p1)) (divP.(split (p2.p2) p1))).((split length (foldr addP (0,0)))).(map p2)
         divP = uncurry div
@@ -1053,7 +1049,10 @@ avgPixel = split avgColor avgSize
 
 pair2list (a,(b,(c,d))) = [a,b,c,d]
 
-outlineQTree = undefined
+outlineQTree b = cataQTree (either f g) where
+        f (k,(i,j)) = matrix j i (if b k then outl j i else false)
+        outl sx sy (x,y) = x == sx || y == sy || x == 1 || y == 1
+        g (a,(b,(c,d))) = (a <|> b) <-> (c <|> d)
 \end{code}
 
 \subsection*{Problema 3}

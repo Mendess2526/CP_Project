@@ -14,7 +14,7 @@
 - [x] `scaleQTree`
 - [x] `invertQTree`
 - [x] `compressQTree`  _da para melhorar_
-- [ ] `outlineQTree`
+- [x] `outlineQTree`
 ### Problema 3
 
 - [ ] `base`
