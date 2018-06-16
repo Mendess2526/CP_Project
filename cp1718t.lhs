@@ -660,7 +660,7 @@ g 0 = 1
 g (d+1) = underbrace ((d+1)) (s d) * g d
 
 s 0 = 1
-s (d+1) = s n + 1
+s (d+1) = s d + 1
 \end{spec}
 A partir daqui alguém derivou a seguinte implementação:
 \begin{code}
@@ -1011,21 +1011,64 @@ blocoFDD = Bcs (("123", (12, [("Bruno", (10, "Fil"))])), blocolista)
 \subsection*{Problema 2}
 
 \begin{code}
-inQTree = undefined
-outQTree = undefined
-baseQTree = undefined
-recQTree = undefined
-cataQTree = undefined
-anaQTree = undefined
-hyloQTree = undefined
+inQTree = either cell block
+cell (c,(x,y))      = Cell c x y
+block (a,(b,(c,d))) = Block a b c d
+outQTree (Cell a x y)    = i1 (a,(x,y))
+outQTree (Block a b c d) = i2 (a,(b,(c,d)))
+baseQTree g f = (g >< id) -|- (f >< (f >< (f >< f)))
+recQTree f = baseQTree id f
+cataQTree g = g . (recQTree (cataQTree g)) . outQTree
+anaQTree f = inQTree . (recQTree (anaQTree f)) . f
+hyloQTree g f = cataQTree g . anaQTree f
 
 instance Functor QTree where
-    fmap = undefined
+    fmap f = cataQTree ( inQTree . baseQTree f id)
 
-rotateQTree = undefined
-scaleQTree = undefined
-invertQTree = undefined
-compressQTree = undefined
+rotateQTree = cataQTree (either flipCell flipTrees)
+    where
+       flipCell = cell.(id >< swap)
+       flipTrees (a, (b, (c, d))) = Block c a d b
+
+scaleQTree s = cataQTree (either scaleCell block)
+    where
+        scaleCell = cell.(id >< ((s*) >< (s*)))
+
+inPixel (r,(g,(b,a))) = PixelRGBA8 r g b a
+outPixel (PixelRGBA8 r g b a) = (r,(g,(b,a)))
+invertQTree = fmap (inPixel.((255-) >< ((255-) >< ((255-) >< id))).outPixel)
+
+
+compressQTree n t = seek ((depthQTree t) - n) t
+    where
+        seek n t | n < 1       = cell (destroy t)
+        seek n (Cell a x y)    = (Cell a x y)
+        seek n (Block a b c d) = Block (seek (n-1) a) (seek (n-1) b) (seek (n-1) c) (seek (n-1) d)
+
+destroy :: QTree a -> (a,(Int, Int))
+destroy = cataQTree (either id (avgPixel2.pair2list))
+
+avgPixel :: ((a,(Int,Int)),((a,(Int,Int)),((a,(Int,Int)),((a,(Int,Int)))))) -> (a,(Int,Int))
+avgPixel ((a,(x1,y1)),((b,_),((c,(_,y2)),(d,(x2,_))))) = (avgColor,(( (x1 + x2) ),( (y1 + y2) )))
+    where avgColor = a -- avgRGB (map outPixel [a,b,c,d])
+
+avgPixel2 :: [(a,(Int,Int))] -> (a,(Int, Int))
+avgPixel2 = split avgColor avgSize
+    where
+        avgColor = p1.head
+        avgSize = (split (divPair.(split (p1.p2) p1)) (divPair.(split (p2.p2) p1))).((split length (foldr addCell (0,0)))).(map p2)
+        divPair = uncurry div
+        addCell (x1,y1) (x2,y2) = (x1+x2,y1+y2)
+
+pair2list (a,(b,(c,d))) = [a,b,c,d]
+
+avgRGB :: [(Int,(Int,(Int,Int)))] -> (Int,(Int,(Int,Int)))
+avgRGB l = ((`div`len) >< ((`div`len) >< ((`div`len) >< (`div`len)))) (foldr suma (0,(0,(0,0))) l)
+        where len = length l
+
+suma :: (Int,(Int,(Int,Int))) -> (Int,(Int,(Int,Int))) -> (Int,(Int,(Int,Int)))
+suma (a,(b,(c,d))) (a1,(b1,(c1,d1))) = (a+a1,(b+b1,(c+c1,d+d1)))
+-- compressQTree = undefined
 outlineQTree = undefined
 \end{code}
 
@@ -1039,19 +1082,33 @@ loop = undefined
 \subsection*{Problema 4}
 
 \begin{code}
-inFTree = undefined
-outFTree = undefined
-baseFTree = undefined
-recFTree = undefined
-cataFTree = undefined
-anaFTree = undefined
-hyloFTree = undefined
+inFTree = either unit comp
+unit = Unit
+comp (a,(b,c)) = Comp a b c
+outFTree (Unit c)       = Left c
+outFTree (Comp a t1 t2) = Right (a, (t1, t2))
+baseFTree f g h = g -|- (f >< (h >< h))
+recFTree f = baseFTree id id f
+cataFTree g = g . (recFTree (cataFTree g) ) . outFTree
+anaFTree f = inFTree . (recFTree (anaFTree f) ) . f
+hyloFTree g f = cataFTree g . anaFTree f
 
 instance Bifunctor FTree where
-    bimap = undefined
+    bimap f g = cataFTree (inFTree . baseFTree f g id)
 
-generatePTree = undefined
+
+generatePTree = anaFTree ((((const 1.0) -|- sqs)).outNat)
+    where
+        sqs = split (pitag.succ) dup
+        pitag = (uncurry (*)).(split pitagConst fromIntegral)
+        pitagConst = const (2.0 * (sqrt 2.0))
+
 drawPTree = undefined
+
+picureTree :: PTree -> FTree Picture Picture
+picureTree = bimap mksquare mksquare
+
+mksquare s = {-Color black-} (Polygon [(0.0,0.0),(0.0,s),(s,s),(s,0.0)])
 \end{code}
 
 \subsection*{Problema 5}
@@ -1314,7 +1371,7 @@ invertBMP from to = withBMP from to invertbm
 
 depthQTree :: QTree a -> Int
 depthQTree = cataQTree (either (const 0) f)
-    where f (a,(b,(c,d))) = maximum [a,b,c,d]
+    where f (a,(b,(c,d))) = 1 + maximum [a,b,c,d]
 
 compressbm :: Eq a => Int -> Matrix a -> Matrix a
 compressbm n = qt2bm . compressQTree n . bm2qt

@@ -891,7 +891,7 @@ e
 \\[\blanklineskip]%
 \>[B]{}\Varid{s}\;\mathrm{0}\mathrel{=}\mathrm{1}{}\<[E]%
 \\
-\>[B]{}\Varid{s}\;(\Varid{d}\mathbin{+}\mathrm{1})\mathrel{=}\Varid{s}\;\Varid{n}\mathbin{+}\mathrm{1}{}\<[E]%
+\>[B]{}\Varid{s}\;(\Varid{d}\mathbin{+}\mathrm{1})\mathrel{=}\Varid{s}\;\Varid{d}\mathbin{+}\mathrm{1}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 A partir daqui alguém derivou a seguinte implementação:
@@ -1369,33 +1369,124 @@ outras funções auxiliares que sejam necessárias.
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{8}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{21}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{26}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{32}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{inQTree}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{inQTree}\mathrel{=}\alt{\Varid{cell}}{\Varid{block}}{}\<[E]%
 \\
-\>[B]{}\Varid{outQTree}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{cell}\;(\Varid{c},(\Varid{x},\Varid{y})){}\<[21]%
+\>[21]{}\mathrel{=}\Conid{Cell}\;\Varid{c}\;\Varid{x}\;\Varid{y}{}\<[E]%
 \\
-\>[B]{}\Varid{baseQTree}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{block}\;(\Varid{a},(\Varid{b},(\Varid{c},\Varid{d})))\mathrel{=}\Conid{Block}\;\Varid{a}\;\Varid{b}\;\Varid{c}\;\Varid{d}{}\<[E]%
 \\
-\>[B]{}\Varid{recQTree}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{outQTree}\;(\Conid{Cell}\;\Varid{a}\;\Varid{x}\;\Varid{y}){}\<[26]%
+\>[26]{}\mathrel{=}i_1\;(\Varid{a},(\Varid{x},\Varid{y})){}\<[E]%
 \\
-\>[B]{}\Varid{cataQTree}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{outQTree}\;(\Conid{Block}\;\Varid{a}\;\Varid{b}\;\Varid{c}\;\Varid{d})\mathrel{=}i_2\;(\Varid{a},(\Varid{b},(\Varid{c},\Varid{d}))){}\<[E]%
 \\
-\>[B]{}\Varid{anaQTree}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{baseQTree}\;\Varid{g}\;\Varid{f}\mathrel{=}(\Varid{g}\times\Varid{id})+(\Varid{f}\times(\Varid{f}\times(\Varid{f}\times\Varid{f}))){}\<[E]%
 \\
-\>[B]{}\Varid{hyloQTree}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{recQTree}\;\Varid{f}\mathrel{=}\Varid{baseQTree}\;\Varid{id}\;\Varid{f}{}\<[E]%
+\\
+\>[B]{}\Varid{cataQTree}\;\Varid{g}\mathrel{=}\Varid{g}\comp (\Varid{recQTree}\;(\Varid{cataQTree}\;\Varid{g}))\comp \Varid{outQTree}{}\<[E]%
+\\
+\>[B]{}\Varid{anaQTree}\;\Varid{f}\mathrel{=}\Varid{inQTree}\comp (\Varid{recQTree}\;(\Varid{anaQTree}\;\Varid{f}))\comp \Varid{f}{}\<[E]%
+\\
+\>[B]{}\Varid{hyloQTree}\;\Varid{g}\;\Varid{f}\mathrel{=}\Varid{cataQTree}\;\Varid{g}\comp \Varid{anaQTree}\;\Varid{f}{}\<[E]%
 \\[\blanklineskip]%
 \>[B]{}\mathbf{instance}\;\Conid{Functor}\;\Conid{QTree}\;\mathbf{where}{}\<[E]%
 \\
 \>[B]{}\hsindent{5}{}\<[5]%
-\>[5]{}\mathsf{fmap}\mathrel{=}\bot {}\<[E]%
+\>[5]{}\mathsf{fmap}\;\Varid{f}\mathrel{=}\Varid{cataQTree}\;(\Varid{inQTree}\comp \Varid{baseQTree}\;\Varid{f}\;\Varid{id}){}\<[E]%
 \\[\blanklineskip]%
-\>[B]{}\Varid{rotateQTree}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{rotateQTree}\mathrel{=}\Varid{cataQTree}\;\alt{\Varid{flipCell}}{\Varid{flipTrees}}{}\<[E]%
 \\
-\>[B]{}\Varid{scaleQTree}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\mathbf{where}{}\<[E]%
 \\
-\>[B]{}\Varid{invertQTree}\mathrel{=}\bot {}\<[E]%
+\>[5]{}\hsindent{3}{}\<[8]%
+\>[8]{}\Varid{flipCell}\mathrel{=}\Varid{cell}\comp (\Varid{id}\times\Varid{swap}){}\<[E]%
 \\
-\>[B]{}\Varid{compressQTree}\mathrel{=}\bot {}\<[E]%
+\>[5]{}\hsindent{3}{}\<[8]%
+\>[8]{}\Varid{flipTrees}\;(\Varid{a},(\Varid{b},(\Varid{c},\Varid{d})))\mathrel{=}\Conid{Block}\;\Varid{c}\;\Varid{a}\;\Varid{d}\;\Varid{b}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{scaleQTree}\;\Varid{s}\mathrel{=}\Varid{cataQTree}\;\alt{\Varid{scaleCell}}{\Varid{block}}{}\<[E]%
+\\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\mathbf{where}{}\<[E]%
+\\
+\>[5]{}\hsindent{4}{}\<[9]%
+\>[9]{}\Varid{scaleCell}\mathrel{=}\Varid{cell}\comp (\Varid{id}\times((\Varid{s}\mathbin{*})\times(\Varid{s}\mathbin{*}))){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{inPixel}\;(\Varid{r},(\Varid{g},(\Varid{b},\Varid{a})))\mathrel{=}\Conid{PixelRGBA8}\;\Varid{r}\;\Varid{g}\;\Varid{b}\;\Varid{a}{}\<[E]%
+\\
+\>[B]{}\Varid{outPixel}\;(\Conid{PixelRGBA8}\;\Varid{r}\;\Varid{g}\;\Varid{b}\;\Varid{a})\mathrel{=}(\Varid{r},(\Varid{g},(\Varid{b},\Varid{a}))){}\<[E]%
+\\
+\>[B]{}\Varid{invertQTree}\mathrel{=}\mathsf{fmap}\;(\Varid{inPixel}\comp ((\mathrm{255}\mathbin{-})\times((\mathrm{255}\mathbin{-})\times((\mathrm{255}\mathbin{-})\times\Varid{id})))\comp \Varid{outPixel}){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{compressQTree}\;\Varid{n}\;\Varid{t}\mathrel{=}\Varid{seek}\;((\Varid{depthQTree}\;\Varid{t})\mathbin{-}\Varid{n})\;\Varid{t}{}\<[E]%
+\\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\mathbf{where}{}\<[E]%
+\\
+\>[5]{}\hsindent{4}{}\<[9]%
+\>[9]{}\Varid{seek}\;\Varid{n}\;\Varid{t}\mid \Varid{n}\mathbin{<}\mathrm{1}{}\<[32]%
+\>[32]{}\mathrel{=}\Varid{cell}\;(\Varid{destroy}\;\Varid{t}){}\<[E]%
+\\
+\>[5]{}\hsindent{4}{}\<[9]%
+\>[9]{}\Varid{seek}\;\Varid{n}\;(\Conid{Cell}\;\Varid{a}\;\Varid{x}\;\Varid{y}){}\<[32]%
+\>[32]{}\mathrel{=}(\Conid{Cell}\;\Varid{a}\;\Varid{x}\;\Varid{y}){}\<[E]%
+\\
+\>[5]{}\hsindent{4}{}\<[9]%
+\>[9]{}\Varid{seek}\;\Varid{n}\;(\Conid{Block}\;\Varid{a}\;\Varid{b}\;\Varid{c}\;\Varid{d})\mathrel{=}\Conid{Block}\;(\Varid{seek}\;(\Varid{n}\mathbin{-}\mathrm{1})\;\Varid{a})\;(\Varid{seek}\;(\Varid{n}\mathbin{-}\mathrm{1})\;\Varid{b})\;(\Varid{seek}\;(\Varid{n}\mathbin{-}\mathrm{1})\;\Varid{c})\;(\Varid{seek}\;(\Varid{n}\mathbin{-}\mathrm{1})\;\Varid{d}){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{destroy}\mathbin{::}\Conid{QTree}\;\Varid{a}\to (\Varid{a},(\Conid{Int},\Conid{Int})){}\<[E]%
+\\
+\>[B]{}\Varid{destroy}\mathrel{=}\Varid{cataQTree}\;\alt{\Varid{id}}{\Varid{avgPixel2}\comp \Varid{pair2list}}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{avgPixel}\mathbin{::}((\Varid{a},(\Conid{Int},\Conid{Int})),((\Varid{a},(\Conid{Int},\Conid{Int})),((\Varid{a},(\Conid{Int},\Conid{Int})),((\Varid{a},(\Conid{Int},\Conid{Int}))))))\to (\Varid{a},(\Conid{Int},\Conid{Int})){}\<[E]%
+\\
+\>[B]{}\Varid{avgPixel}\;((\Varid{a},(\Varid{x1},\Varid{y1})),((\Varid{b},\anonymous ),((\Varid{c},(\anonymous ,\Varid{y2})),(\Varid{d},(\Varid{x2},\anonymous )))))\mathrel{=}(\Varid{avgColor},(((\Varid{x1}\mathbin{+}\Varid{x2})),((\Varid{y1}\mathbin{+}\Varid{y2})))){}\<[E]%
+\\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\mathbf{where}\;\Varid{avgColor}\mathrel{=}\Varid{a}\mbox{\onelinecomment  avgRGB (map outPixel [a,b,c,d])}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{avgPixel2}\mathbin{::}[\mskip1.5mu (\Varid{a},(\Conid{Int},\Conid{Int}))\mskip1.5mu]\to (\Varid{a},(\Conid{Int},\Conid{Int})){}\<[E]%
+\\
+\>[B]{}\Varid{avgPixel2}\mathrel{=}\conj{\Varid{avgColor}}{\Varid{avgSize}}{}\<[E]%
+\\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\mathbf{where}{}\<[E]%
+\\
+\>[5]{}\hsindent{4}{}\<[9]%
+\>[9]{}\Varid{avgColor}\mathrel{=}\p1\comp \Varid{head}{}\<[E]%
+\\
+\>[5]{}\hsindent{4}{}\<[9]%
+\>[9]{}\Varid{avgSize}\mathrel{=}\conj{\Varid{divPair}\comp \conj{\p1\comp \p2}{\p1}}{\Varid{divPair}\comp \conj{\p2\comp \p2}{\p1}}\comp (\conj{\length }{\Varid{foldr}\;\Varid{addCell}\;(\mathrm{0},\mathrm{0})})\comp (\map \;\p2){}\<[E]%
+\\
+\>[5]{}\hsindent{4}{}\<[9]%
+\>[9]{}\Varid{divPair}\mathrel{=}\uncurry{\cdot \div \cdot }{}\<[E]%
+\\
+\>[5]{}\hsindent{4}{}\<[9]%
+\>[9]{}\Varid{addCell}\;(\Varid{x1},\Varid{y1})\;(\Varid{x2},\Varid{y2})\mathrel{=}(\Varid{x1}\mathbin{+}\Varid{x2},\Varid{y1}\mathbin{+}\Varid{y2}){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{pair2list}\;(\Varid{a},(\Varid{b},(\Varid{c},\Varid{d})))\mathrel{=}[\mskip1.5mu \Varid{a},\Varid{b},\Varid{c},\Varid{d}\mskip1.5mu]{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{avgRGB}\mathbin{::}[\mskip1.5mu (\Conid{Int},(\Conid{Int},(\Conid{Int},\Conid{Int})))\mskip1.5mu]\to (\Conid{Int},(\Conid{Int},(\Conid{Int},\Conid{Int}))){}\<[E]%
+\\
+\>[B]{}\Varid{avgRGB}\;\Varid{l}\mathrel{=}((\mathbin{\Varid{`div`}}\Varid{len})\times((\mathbin{\Varid{`div`}}\Varid{len})\times((\mathbin{\Varid{`div`}}\Varid{len})\times(\mathbin{\Varid{`div`}}\Varid{len}))))\;(\Varid{foldr}\;\Varid{suma}\;(\mathrm{0},(\mathrm{0},(\mathrm{0},\mathrm{0})))\;\Varid{l}){}\<[E]%
+\\
+\>[B]{}\hsindent{9}{}\<[9]%
+\>[9]{}\mathbf{where}\;\Varid{len}\mathrel{=}\length \;\Varid{l}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{suma}\mathbin{::}(\Conid{Int},(\Conid{Int},(\Conid{Int},\Conid{Int})))\to (\Conid{Int},(\Conid{Int},(\Conid{Int},\Conid{Int})))\to (\Conid{Int},(\Conid{Int},(\Conid{Int},\Conid{Int}))){}\<[E]%
+\\
+\>[B]{}\Varid{suma}\;(\Varid{a},(\Varid{b},(\Varid{c},\Varid{d})))\;(\Varid{a1},(\Varid{b1},(\Varid{c1},\Varid{d1})))\mathrel{=}(\Varid{a}\mathbin{+}\Varid{a1},(\Varid{b}\mathbin{+}\Varid{b1},(\Varid{c}\mathbin{+}\Varid{c1},\Varid{d}\mathbin{+}\Varid{d1}))){}\<[E]%
+\\
+\>[B]{}\mbox{\onelinecomment  compressQTree = undefined}{}\<[E]%
 \\
 \>[B]{}\Varid{outlineQTree}\mathrel{=}\bot {}\<[E]%
 \ColumnHook
@@ -1417,29 +1508,56 @@ outras funções auxiliares que sejam necessárias.
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{25}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{inFTree}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{inFTree}\mathrel{=}\alt{\Varid{unit}}{\Varid{comp}}{}\<[E]%
 \\
-\>[B]{}\Varid{outFTree}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{unit}\mathrel{=}\Conid{Unit}{}\<[E]%
 \\
-\>[B]{}\Varid{baseFTree}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{comp}\;(\Varid{a},(\Varid{b},\Varid{c}))\mathrel{=}\Conid{Comp}\;\Varid{a}\;\Varid{b}\;\Varid{c}{}\<[E]%
 \\
-\>[B]{}\Varid{recFTree}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{outFTree}\;(\Conid{Unit}\;\Varid{c}){}\<[25]%
+\>[25]{}\mathrel{=}i_1\;\Varid{c}{}\<[E]%
 \\
-\>[B]{}\Varid{cataFTree}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{outFTree}\;(\Conid{Comp}\;\Varid{a}\;\Varid{t1}\;\Varid{t2})\mathrel{=}i_2\;(\Varid{a},(\Varid{t1},\Varid{t2})){}\<[E]%
 \\
-\>[B]{}\Varid{anaFTree}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{baseFTree}\;\Varid{f}\;\Varid{g}\;\Varid{h}\mathrel{=}\Varid{g}+(\Varid{f}\times(\Varid{h}\times\Varid{h})){}\<[E]%
 \\
-\>[B]{}\Varid{hyloFTree}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{recFTree}\;\Varid{f}\mathrel{=}\Varid{baseFTree}\;\Varid{id}\;\Varid{id}\;\Varid{f}{}\<[E]%
+\\
+\>[B]{}\Varid{cataFTree}\;\Varid{g}\mathrel{=}\Varid{g}\comp (\Varid{recFTree}\;(\Varid{cataFTree}\;\Varid{g}))\comp \Varid{outFTree}{}\<[E]%
+\\
+\>[B]{}\Varid{anaFTree}\;\Varid{f}\mathrel{=}\Varid{inFTree}\comp (\Varid{recFTree}\;(\Varid{anaFTree}\;\Varid{f}))\comp \Varid{f}{}\<[E]%
+\\
+\>[B]{}\Varid{hyloFTree}\;\Varid{g}\;\Varid{f}\mathrel{=}\Varid{cataFTree}\;\Varid{g}\comp \Varid{anaFTree}\;\Varid{f}{}\<[E]%
 \\[\blanklineskip]%
 \>[B]{}\mathbf{instance}\;\Conid{Bifunctor}\;\Conid{FTree}\;\mathbf{where}{}\<[E]%
 \\
 \>[B]{}\hsindent{5}{}\<[5]%
-\>[5]{}\Varid{bimap}\mathrel{=}\bot {}\<[E]%
+\>[5]{}\Varid{bimap}\;\Varid{f}\;\Varid{g}\mathrel{=}\Varid{cataFTree}\;(\Varid{inFTree}\comp \Varid{baseFTree}\;\Varid{f}\;\Varid{g}\;\Varid{id}){}\<[E]%
 \\[\blanklineskip]%
-\>[B]{}\Varid{generatePTree}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{generatePTree}\mathrel{=}\Varid{anaFTree}\;(((\underline{\mathrm{1.0}}+\Varid{sqs}))\comp \Varid{outNat}){}\<[E]%
 \\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\mathbf{where}{}\<[E]%
+\\
+\>[5]{}\hsindent{4}{}\<[9]%
+\>[9]{}\Varid{sqs}\mathrel{=}\conj{\Varid{pitag}\comp \succ }{\Varid{dup}}{}\<[E]%
+\\
+\>[5]{}\hsindent{4}{}\<[9]%
+\>[9]{}\Varid{pitag}\mathrel{=}\uncurry{(\mathbin{*})}\comp \conj{\Varid{pitagConst}}{\Varid{fromIntegral}}{}\<[E]%
+\\
+\>[5]{}\hsindent{4}{}\<[9]%
+\>[9]{}\Varid{pitagConst}\mathrel{=}\underline{(\mathrm{2.0}\mathbin{*}(\Varid{sqrt}\;\mathrm{2.0}))}{}\<[E]%
+\\[\blanklineskip]%
 \>[B]{}\Varid{drawPTree}\mathrel{=}\bot {}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{picureTree}\mathbin{::}\Conid{PTree}\to \Conid{FTree}\;\Conid{Picture}\;\Conid{Picture}{}\<[E]%
+\\
+\>[B]{}\Varid{picureTree}\mathrel{=}\Varid{bimap}\;\Varid{mksquare}\;\Varid{mksquare}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{mksquare}\;\Varid{s}\mathrel{=}\mbox{\commentbegin Color black \commentend}(\Conid{Polygon}\;[\mskip1.5mu (\mathrm{0.0},\mathrm{0.0}),(\mathrm{0.0},\Varid{s}),(\Varid{s},\Varid{s}),(\Varid{s},\mathrm{0.0})\mskip1.5mu]){}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
