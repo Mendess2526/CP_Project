@@ -1000,11 +1000,6 @@ perfect = (either true (and.cons.(split (uncurry notElem) (singl.perfect.p2)))).
 
 isValidMagicNr = perfect.magic
 
-bloco1 = Bc ("123", (1234, []))
-bloco2 = Bc ("124", (12, [("Eu", (70, "Bruno"))]))
-blocolista = Bcs ((bc bloco1),  bloco2)
-blocoFDD = Bcs (("123", (12, [("Bruno", (10, "Fil"))])), blocolista)
-
 \end{code}
 
 
@@ -1046,29 +1041,18 @@ compressQTree n t = seek ((depthQTree t) - n) t
         seek n (Block a b c d) = Block (seek (n-1) a) (seek (n-1) b) (seek (n-1) c) (seek (n-1) d)
 
 destroy :: QTree a -> (a,(Int, Int))
-destroy = cataQTree (either id (avgPixel2.pair2list))
+destroy = cataQTree (either id (avgPixel.pair2list))
 
-avgPixel :: ((a,(Int,Int)),((a,(Int,Int)),((a,(Int,Int)),((a,(Int,Int)))))) -> (a,(Int,Int))
-avgPixel ((a,(x1,y1)),((b,_),((c,(_,y2)),(d,(x2,_))))) = (avgColor,(( (x1 + x2) ),( (y1 + y2) )))
-    where avgColor = a -- avgRGB (map outPixel [a,b,c,d])
-
-avgPixel2 :: [(a,(Int,Int))] -> (a,(Int, Int))
-avgPixel2 = split avgColor avgSize
+avgPixel :: [(a,(Int,Int))] -> (a,(Int, Int))
+avgPixel = split avgColor avgSize
     where
-        avgColor = p1.head
-        avgSize = (split (divPair.(split (p1.p2) p1)) (divPair.(split (p2.p2) p1))).((split length (foldr addCell (0,0)))).(map p2)
-        divPair = uncurry div
-        addCell (x1,y1) (x2,y2) = (x1+x2,y1+y2)
+        avgColor = p1.head -- escolhe a primeira porque não tenho maneira de fazer a media
+        avgSize = (split (divP.(split (p1.p2) p1)) (divP.(split (p2.p2) p1))).((split length (foldr addP (0,0)))).(map p2)
+        divP = uncurry div
+        addP (x1,y1) (x2,y2) = (x1+x2,y1+y2)
 
 pair2list (a,(b,(c,d))) = [a,b,c,d]
 
-avgRGB :: [(Int,(Int,(Int,Int)))] -> (Int,(Int,(Int,Int)))
-avgRGB l = ((`div`len) >< ((`div`len) >< ((`div`len) >< (`div`len)))) (foldr suma (0,(0,(0,0))) l)
-        where len = length l
-
-suma :: (Int,(Int,(Int,Int))) -> (Int,(Int,(Int,Int))) -> (Int,(Int,(Int,Int)))
-suma (a,(b,(c,d))) (a1,(b1,(c1,d1))) = (a+a1,(b+b1,(c+c1,d+d1)))
--- compressQTree = undefined
 outlineQTree = undefined
 \end{code}
 

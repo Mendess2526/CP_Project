@@ -1306,7 +1306,6 @@ outras funções auxiliares que sejam necessárias.
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{23}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{30}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{33}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{42}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{inBlockchain}{}\<[23]%
@@ -1351,15 +1350,6 @@ outras funções auxiliares que sejam necessárias.
 \>[B]{}\Varid{perfect}\mathrel{=}\alt{\Varid{true}}{\Varid{and}\comp \Varid{cons}\comp \conj{\uncurry{\Varid{notElem}}}{\Varid{singl}\comp \Varid{perfect}\comp \p2}}\comp \Varid{outList}{}\<[E]%
 \\[\blanklineskip]%
 \>[B]{}\Varid{isValidMagicNr}\mathrel{=}\Varid{perfect}\comp \Varid{magic}{}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\Varid{bloco1}\mathrel{=}\Conid{Bc}\;(\text{\ttfamily \char34 123\char34},(\mathrm{1234},[\mskip1.5mu \mskip1.5mu])){}\<[E]%
-\\
-\>[B]{}\Varid{bloco2}\mathrel{=}\Conid{Bc}\;(\text{\ttfamily \char34 124\char34},(\mathrm{12},[\mskip1.5mu (\text{\ttfamily \char34 Eu\char34},(\mathrm{70},\text{\ttfamily \char34 Bruno\char34}))\mskip1.5mu])){}\<[E]%
-\\
-\>[B]{}\Varid{blocolista}\mathrel{=}\Conid{Bcs}\;((\Varid{bc}\;\Varid{bloco1}),{}\<[33]%
-\>[33]{}\Varid{bloco2}){}\<[E]%
-\\
-\>[B]{}\Varid{blocoFDD}\mathrel{=}\Conid{Bcs}\;((\text{\ttfamily \char34 123\char34},(\mathrm{12},[\mskip1.5mu (\text{\ttfamily \char34 Bruno\char34},(\mathrm{10},\text{\ttfamily \char34 Fil\char34}))\mskip1.5mu])),\Varid{blocolista}){}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
@@ -1445,49 +1435,29 @@ outras funções auxiliares que sejam necessárias.
 \\[\blanklineskip]%
 \>[B]{}\Varid{destroy}\mathbin{::}\Conid{QTree}\;\Varid{a}\to (\Varid{a},(\Conid{Int},\Conid{Int})){}\<[E]%
 \\
-\>[B]{}\Varid{destroy}\mathrel{=}\Varid{cataQTree}\;\alt{\Varid{id}}{\Varid{avgPixel2}\comp \Varid{pair2list}}{}\<[E]%
+\>[B]{}\Varid{destroy}\mathrel{=}\Varid{cataQTree}\;\alt{\Varid{id}}{\Varid{avgPixel}\comp \Varid{pair2list}}{}\<[E]%
 \\[\blanklineskip]%
-\>[B]{}\Varid{avgPixel}\mathbin{::}((\Varid{a},(\Conid{Int},\Conid{Int})),((\Varid{a},(\Conid{Int},\Conid{Int})),((\Varid{a},(\Conid{Int},\Conid{Int})),((\Varid{a},(\Conid{Int},\Conid{Int}))))))\to (\Varid{a},(\Conid{Int},\Conid{Int})){}\<[E]%
+\>[B]{}\Varid{avgPixel}\mathbin{::}[\mskip1.5mu (\Varid{a},(\Conid{Int},\Conid{Int}))\mskip1.5mu]\to (\Varid{a},(\Conid{Int},\Conid{Int})){}\<[E]%
 \\
-\>[B]{}\Varid{avgPixel}\;((\Varid{a},(\Varid{x1},\Varid{y1})),((\Varid{b},\anonymous ),((\Varid{c},(\anonymous ,\Varid{y2})),(\Varid{d},(\Varid{x2},\anonymous )))))\mathrel{=}(\Varid{avgColor},(((\Varid{x1}\mathbin{+}\Varid{x2})),((\Varid{y1}\mathbin{+}\Varid{y2})))){}\<[E]%
-\\
-\>[B]{}\hsindent{5}{}\<[5]%
-\>[5]{}\mathbf{where}\;\Varid{avgColor}\mathrel{=}\Varid{a}\mbox{\onelinecomment  avgRGB (map outPixel [a,b,c,d])}{}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\Varid{avgPixel2}\mathbin{::}[\mskip1.5mu (\Varid{a},(\Conid{Int},\Conid{Int}))\mskip1.5mu]\to (\Varid{a},(\Conid{Int},\Conid{Int})){}\<[E]%
-\\
-\>[B]{}\Varid{avgPixel2}\mathrel{=}\conj{\Varid{avgColor}}{\Varid{avgSize}}{}\<[E]%
+\>[B]{}\Varid{avgPixel}\mathrel{=}\conj{\Varid{avgColor}}{\Varid{avgSize}}{}\<[E]%
 \\
 \>[B]{}\hsindent{5}{}\<[5]%
 \>[5]{}\mathbf{where}{}\<[E]%
 \\
 \>[5]{}\hsindent{4}{}\<[9]%
-\>[9]{}\Varid{avgColor}\mathrel{=}\p1\comp \Varid{head}{}\<[E]%
+\>[9]{}\Varid{avgColor}\mathrel{=}\p1\comp \Varid{head}\mbox{\onelinecomment  escolhe a primeira porque não tenho maneira de fazer a media}{}\<[E]%
 \\
 \>[5]{}\hsindent{4}{}\<[9]%
-\>[9]{}\Varid{avgSize}\mathrel{=}\conj{\Varid{divPair}\comp \conj{\p1\comp \p2}{\p1}}{\Varid{divPair}\comp \conj{\p2\comp \p2}{\p1}}\comp (\conj{\length }{\Varid{foldr}\;\Varid{addCell}\;(\mathrm{0},\mathrm{0})})\comp (\map \;\p2){}\<[E]%
+\>[9]{}\Varid{avgSize}\mathrel{=}\conj{\Varid{divP}\comp \conj{\p1\comp \p2}{\p1}}{\Varid{divP}\comp \conj{\p2\comp \p2}{\p1}}\comp (\conj{\length }{\Varid{foldr}\;\Varid{addP}\;(\mathrm{0},\mathrm{0})})\comp (\map \;\p2){}\<[E]%
 \\
 \>[5]{}\hsindent{4}{}\<[9]%
-\>[9]{}\Varid{divPair}\mathrel{=}\uncurry{\cdot \div \cdot }{}\<[E]%
+\>[9]{}\Varid{divP}\mathrel{=}\uncurry{\cdot \div \cdot }{}\<[E]%
 \\
 \>[5]{}\hsindent{4}{}\<[9]%
-\>[9]{}\Varid{addCell}\;(\Varid{x1},\Varid{y1})\;(\Varid{x2},\Varid{y2})\mathrel{=}(\Varid{x1}\mathbin{+}\Varid{x2},\Varid{y1}\mathbin{+}\Varid{y2}){}\<[E]%
+\>[9]{}\Varid{addP}\;(\Varid{x1},\Varid{y1})\;(\Varid{x2},\Varid{y2})\mathrel{=}(\Varid{x1}\mathbin{+}\Varid{x2},\Varid{y1}\mathbin{+}\Varid{y2}){}\<[E]%
 \\[\blanklineskip]%
 \>[B]{}\Varid{pair2list}\;(\Varid{a},(\Varid{b},(\Varid{c},\Varid{d})))\mathrel{=}[\mskip1.5mu \Varid{a},\Varid{b},\Varid{c},\Varid{d}\mskip1.5mu]{}\<[E]%
 \\[\blanklineskip]%
-\>[B]{}\Varid{avgRGB}\mathbin{::}[\mskip1.5mu (\Conid{Int},(\Conid{Int},(\Conid{Int},\Conid{Int})))\mskip1.5mu]\to (\Conid{Int},(\Conid{Int},(\Conid{Int},\Conid{Int}))){}\<[E]%
-\\
-\>[B]{}\Varid{avgRGB}\;\Varid{l}\mathrel{=}((\mathbin{\Varid{`div`}}\Varid{len})\times((\mathbin{\Varid{`div`}}\Varid{len})\times((\mathbin{\Varid{`div`}}\Varid{len})\times(\mathbin{\Varid{`div`}}\Varid{len}))))\;(\Varid{foldr}\;\Varid{suma}\;(\mathrm{0},(\mathrm{0},(\mathrm{0},\mathrm{0})))\;\Varid{l}){}\<[E]%
-\\
-\>[B]{}\hsindent{9}{}\<[9]%
-\>[9]{}\mathbf{where}\;\Varid{len}\mathrel{=}\length \;\Varid{l}{}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\Varid{suma}\mathbin{::}(\Conid{Int},(\Conid{Int},(\Conid{Int},\Conid{Int})))\to (\Conid{Int},(\Conid{Int},(\Conid{Int},\Conid{Int})))\to (\Conid{Int},(\Conid{Int},(\Conid{Int},\Conid{Int}))){}\<[E]%
-\\
-\>[B]{}\Varid{suma}\;(\Varid{a},(\Varid{b},(\Varid{c},\Varid{d})))\;(\Varid{a1},(\Varid{b1},(\Varid{c1},\Varid{d1})))\mathrel{=}(\Varid{a}\mathbin{+}\Varid{a1},(\Varid{b}\mathbin{+}\Varid{b1},(\Varid{c}\mathbin{+}\Varid{c1},\Varid{d}\mathbin{+}\Varid{d1}))){}\<[E]%
-\\
-\>[B]{}\mbox{\onelinecomment  compressQTree = undefined}{}\<[E]%
-\\
 \>[B]{}\Varid{outlineQTree}\mathrel{=}\bot {}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
