@@ -1423,10 +1423,12 @@ outras funções auxiliares que sejam necessárias.
 \\
 \>[B]{}\hsindent{9}{}\<[9]%
 \>[9]{}\Varid{seek}\;\Varid{n}\;(\Conid{Block}\;\Varid{a}\;\Varid{b}\;\Varid{c}\;\Varid{d})\mathrel{=}\Conid{Block}\;(\Varid{seek}\;(\Varid{n}\mathbin{-}\mathrm{1})\;\Varid{a})\;(\Varid{seek}\;(\Varid{n}\mathbin{-}\mathrm{1})\;\Varid{b})\;(\Varid{seek}\;(\Varid{n}\mathbin{-}\mathrm{1})\;\Varid{c})\;(\Varid{seek}\;(\Varid{n}\mathbin{-}\mathrm{1})\;\Varid{d}){}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\Varid{destroy}\mathbin{::}\Conid{QTree}\;\Varid{a}\to (\Varid{a},(\Conid{Int},\Conid{Int})){}\<[E]%
 \\
-\>[B]{}\Varid{destroy}\mathrel{=}\Varid{cataQTree}\;\alt{\Varid{id}}{\Varid{avgPixel}\comp \Varid{pair2list}}{}\<[E]%
+\>[B]{}\hsindent{9}{}\<[9]%
+\>[9]{}\Varid{destroy}\mathbin{::}\Conid{QTree}\;\Varid{a}\to (\Varid{a},(\Conid{Int},\Conid{Int})){}\<[E]%
+\\
+\>[B]{}\hsindent{9}{}\<[9]%
+\>[9]{}\Varid{destroy}\mathrel{=}\Varid{cataQTree}\;\alt{\Varid{id}}{\Varid{avgPixel}\comp \Varid{pair2list}}{}\<[E]%
 \\[\blanklineskip]%
 \>[B]{}\Varid{avgPixel}\mathbin{::}[\mskip1.5mu (\Varid{a},(\Conid{Int},\Conid{Int}))\mskip1.5mu]\to (\Varid{a},(\Conid{Int},\Conid{Int})){}\<[E]%
 \\

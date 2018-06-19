@@ -1036,9 +1036,8 @@ compressQTree n t = seek ((depthQTree t) - n) t where
         seek n t | n < 1       = cell (destroy t)
         seek n (Cell a x y)    = (Cell a x y)
         seek n (Block a b c d) = Block (seek (n-1) a) (seek (n-1) b) (seek (n-1) c) (seek (n-1) d)
-
-destroy :: QTree a -> (a,(Int, Int))
-destroy = cataQTree (either id (avgPixel.pair2list))
+        destroy :: QTree a -> (a,(Int, Int))
+        destroy = cataQTree (either id (avgPixel.pair2list))
 
 avgPixel :: [(a,(Int,Int))] -> (a,(Int, Int))
 avgPixel = split avgColor avgSize where
