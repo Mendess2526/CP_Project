@@ -1085,12 +1085,13 @@ generatePTree = anaFTree ((((const 1.0) -|- sqs)).outNat)
         pitag = (uncurry (*)).(split pitagConst fromIntegral)
         pitagConst = const (2.0 * (sqrt 2.0))
 
-drawPTree = undefined
+drawPTree = cataFTree (either singl trans) . picureTree where
+        trans = cons . (id >< (uncurry (++)))
 
 picureTree :: PTree -> FTree Picture Picture
 picureTree = bimap mksquare mksquare
 
-mksquare s = {-Color black-} (Polygon [(0.0,0.0),(0.0,s),(s,s),(s,0.0)])
+mksquare = (uncurry rectangleSolid) . dup
 \end{code}
 
 \subsection*{Problema 5}
