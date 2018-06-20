@@ -60,6 +60,8 @@
 %format LTree = "\mathsf{LTree}"
 %format inNat = "\mathsf{in}"
 %format (cataNat (g)) = "\cata{" g "}"
+%format (cataBlockchainI (g)) = "\cata{" g "}"
+%format (cataList (g)) = "\cata{" g "}"
 %format Nat0 = "\N_0"
 %format muB = "\mu "
 %format (frac (n)(m)) = "\frac{" n "}{" m "}"
@@ -973,6 +975,7 @@ outras funções auxiliares que sejam necessárias.
 
 \subsection*{Problema 1}
 
+\subsubsection*{Definições base}
 \begin{code}
 inBlockchain          = either Bc Bcs
 outBlockchain (Bc a)  = i1 a
@@ -981,19 +984,94 @@ recBlockchain f       = id -|- id >< f
 cataBlockchain g      = g . recBlockchain (cataBlockchain g) . outBlockchain
 anaBlockchain h       = inBlockchain . recBlockchain (anaBlockchain h) . h
 hyloBlockchain h g    = cataBlockchain h . anaBlockchain g
-
+\end{code}
+\subsubsection*{All Transactions}
+\begin{eqnarray*}
+\xymatrix@@C=4cm{
+    |Blockchain|
+           \ar[d]_-{|cataBlockchainI g|}
+&
+    |Block + Block * Blockchain|
+           \ar[d]^{|id + id * (cataBlockchainI g)|}
+           \ar[l]_-{|inBlockchain|}
+\\
+     |Transactions|
+&
+     |Block + Block >< Transactions|
+           \ar[l]^-{|g = either (p2.p2) (conc.((p2.p2) >< id))|}
+}
+\end{eqnarray*}
+\begin{code}
 allTransactions = cataBlockchain (either (p2.p2) (conc.((p2.p2) >< id)))
+\end{code}
 
-normL ((e,v), [])            = [(e,v)]
-normL ((e,v), ((el, vl):tl)) | e == el   = (el,v + vl) : tl
-                             | otherwise = (el, vl) : (normL ((e,v), tl))
-
-normalizeL = cataList (either nil normL)
+\subsubsection*{Ledger}
+A implementação deste programa passa por duas partes, apos obter todas as transações (|allTransactions|). Primeiro obtem-se uma ledger
+não normalizada, isto é, uma ledger em que a mesma entidade aparece mais do que uma vez, de seguida normaliza-se esta para que fique
+sem entidades repetidas. Resultando assim tres catamorfismos compostos: |allTransactions|, |cataBlockchainI (either nil (conc.(t2l >< id)))| e
+|normL|.
+\begin{eqnarray*}
+\xymatrix@@C=4cm{
+    |Blockchain|
+           \ar[d]_-{allTransactions}
+&
+\\
+    |Transactions|
+           \ar[d]_-{|cataList g|}
+&
+    |1 + Transaction >< Transactions|
+           \ar[d]^{|id + id * (cataBlockchainI g)|}
+           \ar[l]_-{|inList|}
+\\
+    |Ledger|
+          \ar[d]_{|id|}
+&
+    |1 + Transaction >< Ledger|
+           \ar[l]^-{|g = either nil (conc.(t2l >< id))|}
+\\
+    |Ledger|
+        \ar[d]_-{|normL = cataList f|}
+&
+    |1 + (E >< V) >< Ledger|
+        \ar[d]^{|id + id * (cataList f)|}
+        \ar[l]_-{|inList|}
+\\
+    |Ledger|
+&
+    |1 + (E >< V) >< Ledger|
+        \ar[l]^-{|f = either nil nrm|}
+}
+\end{eqnarray*}
+\begin{code}
+normL = cataList (either nil nrm) where
+        nrm ((e,v), [])            = [(e,v)]
+        nrm ((e,v), ((el, vl):tl)) | e == el   = (el,v + vl) : tl
+                                   | otherwise = (el, vl) : (nrm ((e,v), tl))
 
 t2l (f,(v,t)) = [(f,-v),(t,v)]
 
-ledger = normalizeL.(cataList (either nil (conc.(t2l >< id)))).allTransactions
-
+ledger = normL . (cataList (either nil (conc.(t2l >< id)))) . allTransactions
+\end{code}
+\subsubsection*{isValidMagicNr}
+\begin{eqnarray*}
+\xymatrix@@C=4cm{
+    |Blockchain|
+           \ar[d]_-{|magic = cataBlockchainI g|}
+&
+    |Block + Block * Blockchain|
+           \ar[d]^{|id + id * (cataBlockchainI g)|}
+           \ar[l]_-{|inBlockchain|}
+\\
+     |[MagicNo]|
+           \ar[d]_-{|perfect|}
+&
+     |Block + Block >< [MagicNo]|
+           \ar[l]^-{|g = either (singl.p1) (cons.(p1 >< id))|}
+\\
+     |Bool|
+}
+\end{eqnarray*}
+\begin{code}
 magic = cataBlockchain (either (singl.p1) (cons.(p1 >< id)))
 
 perfect = (either true (and.cons.(split (uncurry notElem) (singl.perfect.p2)))).outList
@@ -1004,7 +1082,7 @@ isValidMagicNr = perfect.magic
 
 
 \subsection*{Problema 2}
-
+\subsubsection*{Definições base}
 \begin{code}
 inQTree = either cell block
 cell (c,(x,y))      = Cell c x y
@@ -1019,10 +1097,12 @@ hyloQTree g f = cataQTree g . anaQTree f
 
 instance Functor QTree where
     fmap f = cataQTree ( inQTree . baseQTree f id)
-
-rotateQTree = cataQTree (either flipCell flipTrees) where
-       flipCell = cell.(id >< swap)
-       flipTrees (a, (b, (c, d))) = Block c a d b
+\end{code}
+\subsubsection*{rotateQTree}
+\begin{code}
+rotateQTree = cataQTree (either rotCell rotTrees) where
+       rotCell = cell.(id >< swap)
+       rotTrees (a, (b, (c, d))) = Block c a d b
 
 scaleQTree s = cataQTree (either scaleCell block) where
         scaleCell = cell.(id >< ((s*) >< (s*)))
@@ -1042,8 +1122,8 @@ compressQTree n t = seek ((depthQTree t) - n) t where
 avgPixel :: [(a,(Int,Int))] -> (a,(Int, Int))
 avgPixel = split avgColor avgSize where
         avgColor = p1.head -- escolhe a primeira porque não tenho maneira de fazer a media
-        avgSize = (split (divP.(split (p1.p2) p1)) (divP.(split (p2.p2) p1))).((split length (foldr addP (0,0)))).(map p2)
-        divP = uncurry div
+        avgSize = (split (divP.(split p1 (const 2))) (divP.(split p2 (const 2)))).(foldr addP (0,0)).(map p2)
+        divP = floor . (uncurry (/)) . (fromIntegral >< fromIntegral)
         addP (x1,y1) (x2,y2) = (x1+x2,y1+y2)
 
 pair2list (a,(b,(c,d))) = [a,b,c,d]

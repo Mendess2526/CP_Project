@@ -1302,11 +1302,10 @@ outras funções auxiliares que sejam necessárias.
 
 \subsection*{Problema 1}
 
+\subsubsection*{Definições base}
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{23}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{30}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{42}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{inBlockchain}{}\<[23]%
 \>[23]{}\mathrel{=}\alt{\Conid{Bc}}{\Conid{Bcs}}{}\<[E]%
@@ -1327,24 +1326,114 @@ outras funções auxiliares que sejam necessárias.
 \\
 \>[B]{}\Varid{hyloBlockchain}\;\Varid{h}\;\Varid{g}{}\<[23]%
 \>[23]{}\mathrel{=}\Varid{cataBlockchain}\;\Varid{h}\comp \Varid{anaBlockchain}\;\Varid{g}{}\<[E]%
-\\[\blanklineskip]%
+\ColumnHook
+\end{hscode}\resethooks
+\subsubsection*{All Transactions}
+\begin{eqnarray*}
+\xymatrix@C=4cm{
+    \ensuremath{\Conid{Blockchain}}
+           \ar[d]_-{\ensuremath{\cata{\Varid{g}}}}
+&
+    \ensuremath{\Conid{Block}\mathbin{+}\Conid{Block}\mathbin{*}\Conid{Blockchain}}
+           \ar[d]^{\ensuremath{\Varid{id}\mathbin{+}\Varid{id}\mathbin{*}\cata{\Varid{g}}}}
+           \ar[l]_-{\ensuremath{\Varid{inBlockchain}}}
+\\
+     \ensuremath{\Conid{Transactions}}
+&
+     \ensuremath{\Conid{Block}\mathbin{+}\Conid{Block}\times\Conid{Transactions}}
+           \ar[l]^-{\ensuremath{\Varid{g}\mathrel{=}\alt{\p2\comp \p2}{\mathsf{conc}\comp ((\p2\comp \p2)\times\Varid{id})}}}
+}
+\end{eqnarray*}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{allTransactions}\mathrel{=}\Varid{cataBlockchain}\;\alt{\p2\comp \p2}{\mathsf{conc}\comp ((\p2\comp \p2)\times\Varid{id})}{}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\Varid{normL}\;((\Varid{e},\Varid{v}),[\mskip1.5mu \mskip1.5mu]){}\<[30]%
-\>[30]{}\mathrel{=}[\mskip1.5mu (\Varid{e},\Varid{v})\mskip1.5mu]{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\subsubsection*{Ledger}
+A implementação deste programa passa por duas partes, apos obter todas as transações (\ensuremath{\Varid{allTransactions}}). Primeiro obtem-se uma ledger
+não normalizada, isto é, uma ledger em que a mesma entidade aparece mais do que uma vez, de seguida normaliza-se esta para que fique
+sem entidades repetidas. Resultando assim tres catamorfismos compostos: \ensuremath{\Varid{allTransactions}}, \ensuremath{\cata{\alt{\Varid{nil}}{\mathsf{conc}\comp (\Varid{t2l}\times\Varid{id})}}} e
+\ensuremath{\Varid{normL}}.
+\begin{eqnarray*}
+\xymatrix@C=4cm{
+    \ensuremath{\Conid{Blockchain}}
+           \ar[d]_-{allTransactions}
+&
 \\
-\>[B]{}\Varid{normL}\;((\Varid{e},\Varid{v}),((\Varid{el},\Varid{vl})\mathbin{:}\Varid{tl}))\mid \Varid{e}\equiv \Varid{el}{}\<[42]%
-\>[42]{}\mathrel{=}(\Varid{el},\Varid{v}\mathbin{+}\Varid{vl})\mathbin{:}\Varid{tl}{}\<[E]%
+    \ensuremath{\Conid{Transactions}}
+           \ar[d]_-{\ensuremath{\cata{\Varid{g}}}}
+&
+    \ensuremath{\mathrm{1}\mathbin{+}\Conid{Transaction}\times\Conid{Transactions}}
+           \ar[d]^{\ensuremath{\Varid{id}\mathbin{+}\Varid{id}\mathbin{*}\cata{\Varid{g}}}}
+           \ar[l]_-{\ensuremath{\Varid{inList}}}
 \\
-\>[B]{}\hsindent{30}{}\<[30]%
-\>[30]{}\mid \Varid{otherwise}\mathrel{=}(\Varid{el},\Varid{vl})\mathbin{:}(\Varid{normL}\;((\Varid{e},\Varid{v}),\Varid{tl})){}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\Varid{normalizeL}\mathrel{=}\Varid{cataList}\;\alt{\Varid{nil}}{\Varid{normL}}{}\<[E]%
+    \ensuremath{\Conid{Ledger}}
+          \ar[d]_{\ensuremath{\Varid{id}}}
+&
+    \ensuremath{\mathrm{1}\mathbin{+}\Conid{Transaction}\times\Conid{Ledger}}
+           \ar[l]^-{\ensuremath{\Varid{g}\mathrel{=}\alt{\Varid{nil}}{\mathsf{conc}\comp (\Varid{t2l}\times\Varid{id})}}}
+\\
+    \ensuremath{\Conid{Ledger}}
+        \ar[d]_-{\ensuremath{\Varid{normL}\mathrel{=}\cata{\Varid{f}}}}
+&
+    \ensuremath{\mathrm{1}\mathbin{+}(\Conid{E}\times\Conid{V})\times\Conid{Ledger}}
+        \ar[d]^{\ensuremath{\Varid{id}\mathbin{+}\Varid{id}\mathbin{*}\cata{\Varid{f}}}}
+        \ar[l]_-{\ensuremath{\Varid{inList}}}
+\\
+    \ensuremath{\Conid{Ledger}}
+&
+    \ensuremath{\mathrm{1}\mathbin{+}(\Conid{E}\times\Conid{V})\times\Conid{Ledger}}
+        \ar[l]^-{\ensuremath{\Varid{f}\mathrel{=}\alt{\Varid{nil}}{\Varid{nrm}}}}
+}
+\end{eqnarray*}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{36}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{48}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{normL}\mathrel{=}\cata{\alt{\Varid{nil}}{\Varid{nrm}}}\;\mathbf{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{9}{}\<[9]%
+\>[9]{}\Varid{nrm}\;((\Varid{e},\Varid{v}),[\mskip1.5mu \mskip1.5mu]){}\<[36]%
+\>[36]{}\mathrel{=}[\mskip1.5mu (\Varid{e},\Varid{v})\mskip1.5mu]{}\<[E]%
+\\
+\>[B]{}\hsindent{9}{}\<[9]%
+\>[9]{}\Varid{nrm}\;((\Varid{e},\Varid{v}),((\Varid{el},\Varid{vl})\mathbin{:}\Varid{tl}))\mid \Varid{e}\equiv \Varid{el}{}\<[48]%
+\>[48]{}\mathrel{=}(\Varid{el},\Varid{v}\mathbin{+}\Varid{vl})\mathbin{:}\Varid{tl}{}\<[E]%
+\\
+\>[9]{}\hsindent{27}{}\<[36]%
+\>[36]{}\mid \Varid{otherwise}\mathrel{=}(\Varid{el},\Varid{vl})\mathbin{:}(\Varid{nrm}\;((\Varid{e},\Varid{v}),\Varid{tl})){}\<[E]%
 \\[\blanklineskip]%
 \>[B]{}\Varid{t2l}\;(\Varid{f},(\Varid{v},\Varid{t}))\mathrel{=}[\mskip1.5mu (\Varid{f},\mathbin{-}\Varid{v}),(\Varid{t},\Varid{v})\mskip1.5mu]{}\<[E]%
 \\[\blanklineskip]%
-\>[B]{}\Varid{ledger}\mathrel{=}\Varid{normalizeL}\comp (\Varid{cataList}\;\alt{\Varid{nil}}{\mathsf{conc}\comp (\Varid{t2l}\times\Varid{id})})\comp \Varid{allTransactions}{}\<[E]%
-\\[\blanklineskip]%
+\>[B]{}\Varid{ledger}\mathrel{=}\Varid{normL}\comp \cata{\alt{\Varid{nil}}{\mathsf{conc}\comp (\Varid{t2l}\times\Varid{id})}}\comp \Varid{allTransactions}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+\subsubsection*{isValidMagicNr}
+\begin{eqnarray*}
+\xymatrix@C=4cm{
+    \ensuremath{\Conid{Blockchain}}
+           \ar[d]_-{\ensuremath{\Varid{magic}\mathrel{=}\cata{\Varid{g}}}}
+&
+    \ensuremath{\Conid{Block}\mathbin{+}\Conid{Block}\mathbin{*}\Conid{Blockchain}}
+           \ar[d]^{\ensuremath{\Varid{id}\mathbin{+}\Varid{id}\mathbin{*}\cata{\Varid{g}}}}
+           \ar[l]_-{\ensuremath{\Varid{inBlockchain}}}
+\\
+     \ensuremath{[\mskip1.5mu \Conid{MagicNo}\mskip1.5mu]}
+           \ar[d]_-{\ensuremath{\Varid{perfect}}}
+&
+     \ensuremath{\Conid{Block}\mathbin{+}\Conid{Block}\times[\mskip1.5mu \Conid{MagicNo}\mskip1.5mu]}
+           \ar[l]^-{\ensuremath{\Varid{g}\mathrel{=}\alt{\Varid{singl}\comp \p1}{\Varid{cons}\comp (\p1\times\Varid{id})}}}
+\\
+     \ensuremath{\Conid{Bool}}
+}
+\end{eqnarray*}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{magic}\mathrel{=}\Varid{cataBlockchain}\;\alt{\Varid{singl}\comp \p1}{\Varid{cons}\comp (\p1\times\Varid{id})}{}\<[E]%
 \\[\blanklineskip]%
 \>[B]{}\Varid{perfect}\mathrel{=}\alt{\Varid{true}}{\Varid{and}\comp \Varid{cons}\comp \conj{\uncurry{\Varid{notElem}}}{\Varid{singl}\comp \Varid{perfect}\comp \p2}}\comp \Varid{outList}{}\<[E]%
@@ -1355,15 +1444,12 @@ outras funções auxiliares que sejam necessárias.
 
 
 \subsection*{Problema 2}
-
+\subsubsection*{Definições base}
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{5}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{8}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{21}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{26}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{32}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{inQTree}\mathrel{=}\alt{\Varid{cell}}{\Varid{block}}{}\<[E]%
 \\
@@ -1391,14 +1477,40 @@ outras funções auxiliares que sejam necessárias.
 \\
 \>[B]{}\hsindent{5}{}\<[5]%
 \>[5]{}\mathsf{fmap}\;\Varid{f}\mathrel{=}\Varid{cataQTree}\;(\Varid{inQTree}\comp \Varid{baseQTree}\;\Varid{f}\;\Varid{id}){}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\Varid{rotateQTree}\mathrel{=}\Varid{cataQTree}\;\alt{\Varid{flipCell}}{\Varid{flipTrees}}\;\mathbf{where}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+\subsubsection*{rotateQTree}
+\begin{eqnarray*}
+\xymatrix@C=4cm{
+    \ensuremath{\Conid{Blockchain}}
+           \ar[d]_-{\ensuremath{\Varid{magic}\mathrel{=}\cata{\Varid{g}}}}
+&
+    \ensuremath{\Conid{Block}\mathbin{+}\Conid{Block}\mathbin{*}\Conid{Blockchain}}
+           \ar[d]^{\ensuremath{\Varid{id}\mathbin{+}\Varid{id}\mathbin{*}\cata{\Varid{g}}}}
+           \ar[l]_-{\ensuremath{\Varid{inBlockchain}}}
+\\
+     \ensuremath{[\mskip1.5mu \Conid{MagicNo}\mskip1.5mu]}
+           \ar[d]_-{\ensuremath{\Varid{perfect}}}
+&
+     \ensuremath{\Conid{Block}\mathbin{+}\Conid{Block}\times[\mskip1.5mu \Conid{MagicNo}\mskip1.5mu]}
+           \ar[l]^-{\ensuremath{\Varid{g}\mathrel{=}\alt{\Varid{singl}\comp \p1}{\Varid{cons}\comp (\p1\times\Varid{id})}}}
+\\
+     \ensuremath{\Conid{Bool}}
+}
+\end{eqnarray*}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{8}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{32}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{rotateQTree}\mathrel{=}\Varid{cataQTree}\;\alt{\Varid{rotCell}}{\Varid{rotTrees}}\;\mathbf{where}{}\<[E]%
 \\
 \>[B]{}\hsindent{8}{}\<[8]%
-\>[8]{}\Varid{flipCell}\mathrel{=}\Varid{cell}\comp (\Varid{id}\times\Varid{swap}){}\<[E]%
+\>[8]{}\Varid{rotCell}\mathrel{=}\Varid{cell}\comp (\Varid{id}\times\Varid{swap}){}\<[E]%
 \\
 \>[B]{}\hsindent{8}{}\<[8]%
-\>[8]{}\Varid{flipTrees}\;(\Varid{a},(\Varid{b},(\Varid{c},\Varid{d})))\mathrel{=}\Conid{Block}\;\Varid{c}\;\Varid{a}\;\Varid{d}\;\Varid{b}{}\<[E]%
+\>[8]{}\Varid{rotTrees}\;(\Varid{a},(\Varid{b},(\Varid{c},\Varid{d})))\mathrel{=}\Conid{Block}\;\Varid{c}\;\Varid{a}\;\Varid{d}\;\Varid{b}{}\<[E]%
 \\[\blanklineskip]%
 \>[B]{}\Varid{scaleQTree}\;\Varid{s}\mathrel{=}\Varid{cataQTree}\;\alt{\Varid{scaleCell}}{\Varid{block}}\;\mathbf{where}{}\<[E]%
 \\
@@ -1438,10 +1550,10 @@ outras funções auxiliares que sejam necessárias.
 \>[9]{}\Varid{avgColor}\mathrel{=}\p1\comp \Varid{head}\mbox{\onelinecomment  escolhe a primeira porque não tenho maneira de fazer a media}{}\<[E]%
 \\
 \>[B]{}\hsindent{9}{}\<[9]%
-\>[9]{}\Varid{avgSize}\mathrel{=}\conj{\Varid{divP}\comp \conj{\p1\comp \p2}{\p1}}{\Varid{divP}\comp \conj{\p2\comp \p2}{\p1}}\comp (\conj{\length }{\Varid{foldr}\;\Varid{addP}\;(\mathrm{0},\mathrm{0})})\comp (\map \;\p2){}\<[E]%
+\>[9]{}\Varid{avgSize}\mathrel{=}\conj{\Varid{divP}\comp \conj{\p1}{\underline{\mathrm{2}}}}{\Varid{divP}\comp \conj{\p2}{\underline{\mathrm{2}}}}\comp (\Varid{foldr}\;\Varid{addP}\;(\mathrm{0},\mathrm{0}))\comp (\map \;\p2){}\<[E]%
 \\
 \>[B]{}\hsindent{9}{}\<[9]%
-\>[9]{}\Varid{divP}\mathrel{=}\uncurry{\cdot \div \cdot }{}\<[E]%
+\>[9]{}\Varid{divP}\mathrel{=}\Varid{floor}\comp \uncurry{(\mathbin{/})}\comp (\Varid{fromIntegral}\times\Varid{fromIntegral}){}\<[E]%
 \\
 \>[B]{}\hsindent{9}{}\<[9]%
 \>[9]{}\Varid{addP}\;(\Varid{x1},\Varid{y1})\;(\Varid{x2},\Varid{y2})\mathrel{=}(\Varid{x1}\mathbin{+}\Varid{x2},\Varid{y1}\mathbin{+}\Varid{y2}){}\<[E]%
@@ -1527,9 +1639,6 @@ outras funções auxiliares que sejam necessárias.
 \>[B]{}\Varid{drawPTree}\mathrel{=}\Varid{cataFTree}\;\alt{\Varid{singl}}{\Varid{trans}}\comp \Varid{picureTree}\;\mathbf{where}{}\<[E]%
 \\
 \>[B]{}\hsindent{9}{}\<[9]%
-\>[9]{}\Varid{trans}\mathbin{::}(\Conid{Picture},([\mskip1.5mu \Conid{Picture}\mskip1.5mu],[\mskip1.5mu \Conid{Picture}\mskip1.5mu]))\to [\mskip1.5mu \Conid{Picture}\mskip1.5mu]{}\<[E]%
-\\
-\>[B]{}\hsindent{9}{}\<[9]%
 \>[9]{}\Varid{trans}\;(\Varid{a},(\Varid{l},\Varid{r}))\mathrel{=}\Varid{a}\mathbin{:}\Varid{movel}\;\Varid{l}\plus \Varid{mover}\;\Varid{r}{}\<[E]%
 \\
 \>[9]{}\hsindent{4}{}\<[13]%
@@ -1554,14 +1663,6 @@ outras funções auxiliares que sejam necessárias.
 \\
 \>[13]{}\hsindent{4}{}\<[17]%
 \>[17]{}\Varid{width}\;(\Conid{Rotate}\;\anonymous \;\Varid{p})\mathrel{=}\Varid{width}\;\Varid{p}{}\<[E]%
-\\
-\>[13]{}\hsindent{4}{}\<[17]%
-\>[17]{}\Varid{width}\;(\Conid{Pictures}\;(\Varid{h}\mathbin{:}\Varid{t}))\mathrel{=}\Varid{width}\;\Varid{h}{}\<[E]%
-\\
-\>[B]{}\mbox{\commentbegin 
-flatMap (Polygon p) = p
-flatMap (Translate x y (Pictures (h:t))) = Translate x y h : flatMap (Translate x y (Pictures t))
-flatMap (Rotate a p) = \commentend}{}\<[E]%
 \\[\blanklineskip]%
 \>[B]{}\Varid{picureTree}\mathbin{::}\Conid{PTree}\to \Conid{FTree}\;\Conid{Picture}\;\Conid{Picture}{}\<[E]%
 \\
