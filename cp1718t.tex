@@ -1478,7 +1478,11 @@ outras funções auxiliares que sejam necessárias.
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{5}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{9}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{13}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{17}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{25}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{60}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{78}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{inFTree}\mathrel{=}\alt{\Varid{unit}}{\Varid{comp}}{}\<[E]%
 \\
@@ -1520,13 +1524,47 @@ outras funções auxiliares que sejam necessárias.
 \>[5]{}\hsindent{4}{}\<[9]%
 \>[9]{}\Varid{pitagConst}\mathrel{=}\underline{(\mathrm{2.0}\mathbin{*}(\Varid{sqrt}\;\mathrm{2.0}))}{}\<[E]%
 \\[\blanklineskip]%
-\>[B]{}\Varid{drawPTree}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{drawPTree}\mathrel{=}\Varid{cataFTree}\;\alt{\Varid{singl}}{\Varid{trans}}\comp \Varid{picureTree}\;\mathbf{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{9}{}\<[9]%
+\>[9]{}\Varid{trans}\mathbin{::}(\Conid{Picture},([\mskip1.5mu \Conid{Picture}\mskip1.5mu],[\mskip1.5mu \Conid{Picture}\mskip1.5mu]))\to [\mskip1.5mu \Conid{Picture}\mskip1.5mu]{}\<[E]%
+\\
+\>[B]{}\hsindent{9}{}\<[9]%
+\>[9]{}\Varid{trans}\;(\Varid{a},(\Varid{l},\Varid{r}))\mathrel{=}\Varid{a}\mathbin{:}\Varid{movel}\;\Varid{l}\plus \Varid{mover}\;\Varid{r}{}\<[E]%
+\\
+\>[9]{}\hsindent{4}{}\<[13]%
+\>[13]{}\mathbf{where}{}\<[E]%
+\\
+\>[13]{}\hsindent{4}{}\<[17]%
+\>[17]{}\Varid{movel}\mathrel{=}\map \;(\lambda \Varid{h}\to \Conid{Rotate}\;\mathrm{45}\;(\Conid{Translate}\;(\mathbin{-}((\Varid{width}\;\Varid{a})\mathbin{/}\mathrm{2.0}))\;(\Varid{sqrt}\;((\Varid{width}\;\Varid{h})\mathbin{\uparrow}\mathrm{2})\mathbin{/}\mathrm{2})\;\Varid{h})){}\<[E]%
+\\
+\>[13]{}\hsindent{4}{}\<[17]%
+\>[17]{}\Varid{mover}\mathrel{=}\map \;(\lambda \Varid{h}\to \Conid{Rotate}\;\mathrm{45}\;(\Conid{Translate}\;({}\<[60]%
+\>[60]{}(\Varid{width}\;\Varid{a})\mathbin{/}\mathrm{2.0})\;{}\<[78]%
+\>[78]{}(\Varid{sqrt}\;((\Varid{width}\;\Varid{h})\mathbin{\uparrow}\mathrm{2})\mathbin{/}\mathrm{2})\;\Varid{h})){}\<[E]%
+\\
+\>[13]{}\hsindent{4}{}\<[17]%
+\>[17]{}\Varid{width}\;(\Conid{Polygon}\;(\anonymous \mathbin{:}\Varid{side}\mathbin{:}\Varid{t}))\mathrel{=}(\p1\;\Varid{side})\mathbin{+}(\p2\;\Varid{side}){}\<[E]%
+\\
+\>[13]{}\hsindent{4}{}\<[17]%
+\>[17]{}\Varid{width}\;(\Conid{Translate}\;\anonymous \;\anonymous \;\Varid{p})\mathrel{=}\Varid{width}\;\Varid{p}{}\<[E]%
+\\
+\>[13]{}\hsindent{4}{}\<[17]%
+\>[17]{}\Varid{width}\;(\Conid{Rotate}\;\anonymous \;\Varid{p})\mathrel{=}\Varid{width}\;\Varid{p}{}\<[E]%
+\\
+\>[13]{}\hsindent{4}{}\<[17]%
+\>[17]{}\Varid{width}\;(\Conid{Pictures}\;(\Varid{h}\mathbin{:}\Varid{t}))\mathrel{=}\Varid{width}\;\Varid{h}{}\<[E]%
+\\
+\>[B]{}\mbox{\commentbegin 
+flatMap (Polygon p) = p
+flatMap (Translate x y (Pictures (h:t))) = Translate x y h : flatMap (Translate x y (Pictures t))
+flatMap (Rotate a p) = \commentend}{}\<[E]%
 \\[\blanklineskip]%
 \>[B]{}\Varid{picureTree}\mathbin{::}\Conid{PTree}\to \Conid{FTree}\;\Conid{Picture}\;\Conid{Picture}{}\<[E]%
 \\
 \>[B]{}\Varid{picureTree}\mathrel{=}\Varid{bimap}\;\Varid{mksquare}\;\Varid{mksquare}{}\<[E]%
 \\[\blanklineskip]%
-\>[B]{}\Varid{mksquare}\;\Varid{s}\mathrel{=}\mbox{\commentbegin Color black \commentend}(\Conid{Polygon}\;[\mskip1.5mu (\mathrm{0.0},\mathrm{0.0}),(\mathrm{0.0},\Varid{s}),(\Varid{s},\Varid{s}),(\Varid{s},\mathrm{0.0})\mskip1.5mu]){}\<[E]%
+\>[B]{}\Varid{mksquare}\mathrel{=}\uncurry{\Varid{rectangleSolid}}\comp \Varid{dup}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
