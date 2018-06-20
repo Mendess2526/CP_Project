@@ -1091,7 +1091,7 @@ drawPTree = cataFTree (either singl trans) . picureTree where
             where
                 movel = map (\h -> Rotate 45 (Translate (-((width a) / 2.0)) (sqrt ((width h)^2) / 2) h))
                 mover = map (\h -> Rotate 45 (Translate (  (width a) / 2.0)  (sqrt ((width h)^2) / 2) h))
-                width (Polygon (_:side:t)) = (p1 side) + (p2 side)
+                width (Polygon (_:side:t)) = abs ((p1 side) - (p2 side))
                 width (Translate _ _ p) = width p
                 width (Rotate _ p) = width p
                 width (Pictures (h:t)) = width h
