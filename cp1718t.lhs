@@ -1086,20 +1086,15 @@ generatePTree = anaFTree ((((const 1.0) -|- sqs)).outNat)
         pitagConst = const (2.0 * (sqrt 2.0))
 
 drawPTree = cataFTree (either singl trans) . picureTree where
-        trans :: (Picture, ([Picture], [Picture])) -> [Picture]
         trans (a,(l,r)) = a : movel l ++ mover r
             where
-                movel = map (\h -> Rotate 45 (Translate (-((width a) / 2.0)) (sqrt ((width h)^2) / 2) h))
-                mover = map (\h -> Rotate 45 (Translate (  (width a) / 2.0)  (sqrt ((width h)^2) / 2) h))
+                movel = map (\h -> Rotate 45 (Translate (-halfA) (halfA + sqrt ((width h)^2) / 2) h))
+                mover = map (\h -> Rotate 45 (Translate   halfA  (halfA + sqrt ((width h)^2) / 2) h))
+                halfA = ((width a) / 2.0)
                 width (Polygon (_:side:t)) = abs ((p1 side) - (p2 side))
                 width (Translate _ _ p) = width p
                 width (Rotate _ p) = width p
-                width (Pictures (h:t)) = width h
-{-
-flatMap (Polygon p) = p
-flatMap (Translate x y (Pictures (h:t))) = Translate x y h : flatMap (Translate x y (Pictures t))
-flatMap (Rotate a p) =
--}
+
 picureTree :: PTree -> FTree Picture Picture
 picureTree = bimap mksquare mksquare
 

@@ -1481,8 +1481,8 @@ outras funções auxiliares que sejam necessárias.
 \column{13}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{17}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{25}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{60}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{78}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{59}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{66}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{inFTree}\mathrel{=}\alt{\Varid{unit}}{\Varid{comp}}{}\<[E]%
 \\
@@ -1536,15 +1536,18 @@ outras funções auxiliares que sejam necessárias.
 \>[13]{}\mathbf{where}{}\<[E]%
 \\
 \>[13]{}\hsindent{4}{}\<[17]%
-\>[17]{}\Varid{movel}\mathrel{=}\map \;(\lambda \Varid{h}\to \Conid{Rotate}\;\mathrm{45}\;(\Conid{Translate}\;(\mathbin{-}((\Varid{width}\;\Varid{a})\mathbin{/}\mathrm{2.0}))\;(\Varid{sqrt}\;((\Varid{width}\;\Varid{h})\mathbin{\uparrow}\mathrm{2})\mathbin{/}\mathrm{2})\;\Varid{h})){}\<[E]%
+\>[17]{}\Varid{movel}\mathrel{=}\map \;(\lambda \Varid{h}\to \Conid{Rotate}\;\mathrm{45}\;(\Conid{Translate}\;(\mathbin{-}\Varid{halfA})\;(\Varid{halfA}\mathbin{+}\Varid{sqrt}\;((\Varid{width}\;\Varid{h})\mathbin{\uparrow}\mathrm{2})\mathbin{/}\mathrm{2})\;\Varid{h})){}\<[E]%
 \\
 \>[13]{}\hsindent{4}{}\<[17]%
-\>[17]{}\Varid{mover}\mathrel{=}\map \;(\lambda \Varid{h}\to \Conid{Rotate}\;\mathrm{45}\;(\Conid{Translate}\;({}\<[60]%
-\>[60]{}(\Varid{width}\;\Varid{a})\mathbin{/}\mathrm{2.0})\;{}\<[78]%
-\>[78]{}(\Varid{sqrt}\;((\Varid{width}\;\Varid{h})\mathbin{\uparrow}\mathrm{2})\mathbin{/}\mathrm{2})\;\Varid{h})){}\<[E]%
+\>[17]{}\Varid{mover}\mathrel{=}\map \;(\lambda \Varid{h}\to \Conid{Rotate}\;\mathrm{45}\;(\Conid{Translate}\;{}\<[59]%
+\>[59]{}\Varid{halfA}\;{}\<[66]%
+\>[66]{}(\Varid{halfA}\mathbin{+}\Varid{sqrt}\;((\Varid{width}\;\Varid{h})\mathbin{\uparrow}\mathrm{2})\mathbin{/}\mathrm{2})\;\Varid{h})){}\<[E]%
 \\
 \>[13]{}\hsindent{4}{}\<[17]%
-\>[17]{}\Varid{width}\;(\Conid{Polygon}\;(\anonymous \mathbin{:}\Varid{side}\mathbin{:}\Varid{t}))\mathrel{=}(\p1\;\Varid{side})\mathbin{+}(\p2\;\Varid{side}){}\<[E]%
+\>[17]{}\Varid{halfA}\mathrel{=}((\Varid{width}\;\Varid{a})\mathbin{/}\mathrm{2.0}){}\<[E]%
+\\
+\>[13]{}\hsindent{4}{}\<[17]%
+\>[17]{}\Varid{width}\;(\Conid{Polygon}\;(\anonymous \mathbin{:}\Varid{side}\mathbin{:}\Varid{t}))\mathrel{=}\Varid{abs}\;((\p1\;\Varid{side})\mathbin{-}(\p2\;\Varid{side})){}\<[E]%
 \\
 \>[13]{}\hsindent{4}{}\<[17]%
 \>[17]{}\Varid{width}\;(\Conid{Translate}\;\anonymous \;\anonymous \;\Varid{p})\mathrel{=}\Varid{width}\;\Varid{p}{}\<[E]%
