@@ -742,6 +742,13 @@ animatePTree n = animate window white draw
     where
     pics = drawPTree (generatePTree n)
     draw t = pics !! (floor (t/2))
+
+{-
+animatePTree n = display window white pics
+    where
+    pics = last $ drawPTree (generatePTree n)
+    -- draw t = pics !! (floor (t/2))
+-}
 \end{code}
 %endif
 
@@ -1112,11 +1119,19 @@ outPixel (PixelRGBA8 r g b a) = (r,(g,(b,a)))
 invertQTree = fmap (inPixel.((255-) >< ((255-) >< ((255-) >< id))).outPixel)
 
 
+{-compressQTree n t = anaQTree (seek.(id >< outQTree)) ((depthQTree t) - n, t) where
+        seek = (
+        seek (_, (Cell n x y)) = i1 (n, (x, y))
+        seek (n, (Block a b c d)) = if (alt <= 0)
+                                    then i1 (destroy (Block a b c d))
+                                    else i2 ((nxt, a), ((nxt, b), ((nxt, c), (nxt, d))))
+                                    where nxt = pred n
+-}
+
 compressQTree n t = seek ((depthQTree t) - n) t where
         seek n t | n < 1       = cell (destroy t)
         seek n (Cell a x y)    = (Cell a x y)
         seek n (Block a b c d) = Block (seek (n-1) a) (seek (n-1) b) (seek (n-1) c) (seek (n-1) d)
-        destroy :: QTree a -> (a,(Int, Int))
         destroy = cataQTree (either id (avgPixel.pair2list))
 
 avgPixel :: [(a,(Int,Int))] -> (a,(Int, Int))
@@ -1159,26 +1174,50 @@ instance Bifunctor FTree where
     bimap f g = cataFTree (inFTree . baseFTree f g id)
 
 
-generatePTree = anaFTree ((((const 1.0) -|- sqs)).outNat)
+generatePTree = anaFTree ((((const 10.0) -|- sqs)).outNat)
     where
         sqs = split (pitag.succ) dup
-        pitag = (uncurry (*)).(split pitagConst fromIntegral)
-        pitagConst = const (2.0 * (sqrt 2.0))
+        pitag = ((*) (20.0 / (sqrt 2.0))).fromIntegral
 
-drawPTree = cataFTree (either singl trans) . picureTree where
-        trans (a,(l,r)) = a : movel l ++ mover r
+drawPTree = cataFTree (either (singl.mksquare) trans) where
+        mksquare = (uncurry rectangleSolid) . dup
+        trans (a,(l,r)) = newRect : (zipWith (\b c -> Pictures [newRect, movel b, mover c]) l r)
             where
-                movel = map (\h -> Rotate 45 (Translate (-halfA) (halfA + sqrt ((width h)^2) / 2) h))
-                mover = map (\h -> Rotate 45 (Translate   halfA  (halfA + sqrt ((width h)^2) / 2) h))
-                halfA = ((width a) / 2.0)
-                width (Polygon (_:side:t)) = abs ((p1 side) - (p2 side))
-                width (Translate _ _ p) = width p
-                width (Rotate _ p) = width p
+                newRect = mksquare a
+                movel = ((Translate (-halfA) a).(Rotate (-45)))
+                mover = ((Translate   halfA  a).(Rotate   45 ))
+                halfA = a / 2.0
 
-picureTree :: PTree -> FTree Picture Picture
-picureTree = bimap mksquare mksquare
 
-mksquare = (uncurry rectangleSolid) . dup
+{-
+mksquare [a,b,c,d] edge = Polygon [b,f,g,h] where
+        f = (edge                    * cos135 + (p1 b), edge                    * sin135 + (p2 b))
+        g = ((sqrt (2 * (edge ^ 2))) * cos90  + (p1 b), (sqrt (2 * (edge ^ 2))) * sin90  + (p2 b))
+        h = (edge                    * cos45  + (p1 b), edge                    * sin45  + (p2 b))
+        cos45  = (sqrt 2) / 2
+        cos90  = 0
+        cos135 = -cos45
+        sin45  = cos45
+        sin90  = 1
+        sin135 = -sin45
+
+
+drawPTree = (map Pictures) . reverse . mkmorelist . (split (mksquares . (split (Polygon . nil) id)) depthFTree) where
+        sq :: Picture -> Float -> Picture
+        sq (Polygon []) a = rectangleSolid a a
+        sq (Polygon pr) a = mksquare pr a
+        mksquares :: (Picture, PTree) -> [Picture]
+        mksquares (pr, Unit a) = [sq pr a]
+        mksquares (pr, Comp a l r) = s : (mksquares (s,l))-- ++ (mksquares (revS s,r))
+            where
+                s = sq pr a
+                revS (Polygon p) = Polygon $ (drop 2 p) ++ (take 2 p)
+-}
+-- isto pode ser um ana
+mkmorelist :: ([a], Int) -> [[a]]
+mkmorelist (l, 0) = [take 1 l]
+mkmorelist (l, n) = take (sum [2 ^ x | x <- [1..n]]) l : mkmorelist (l, (pred n))
+
 \end{code}
 
 \subsection*{Problema 5}
@@ -1190,7 +1229,7 @@ dist = undefined
 \end{code}
 
 \section{Como exprimir cálculos e diagramas em LaTeX/lhs2tex}
-Estudar o texto fonte deste trabalho para obter o efeito:\footnote{Exemplos tirados de \cite{Ol18}.} 
+Estudar o texto fonte deste trabalho para obter o efeito:\footnote{Exemplos tirados de \cite{Ol18}.}
 \begin{eqnarray*}
 \start
 	|id = split f g|
