@@ -994,7 +994,7 @@ hyloBlockchain h g    = cataBlockchain h . anaBlockchain g
 \xymatrix@@C=4cm{
     |Blockchain|
            \ar[d]_-{|cataBlockchainI g|}
-           \ar[r]_-{|outBlockchain|}
+           \ar[r]_-{|outT|}
 &
     |Block + Block * Blockchain|
            \ar[d]^{|id + id * (cataBlockchainI g)|}
@@ -1022,10 +1022,10 @@ sem entidades repetidas. Resultando assim tres catamorfismos compostos: |allTran
 \\
     |Transactions|
            \ar[d]_-{|cataList g|}
-           \ar[r]_-{|outList|}
+           \ar[r]_-{|outT|}
 &
     |1 + Transaction >< Transactions|
-           \ar[d]^{|id + id * (cataBlockchainI g)|}
+           \ar[d]^{|id + id >< (cataBlockchainI g)|}
 \\
     |Ledger|
           \ar[d]_{|id|}
@@ -1035,10 +1035,10 @@ sem entidades repetidas. Resultando assim tres catamorfismos compostos: |allTran
 \\
     |Ledger|
         \ar[d]_-{|normL = cataList f|}
-        \ar[r]_-{|outList|}
+        \ar[r]_-{|outT|}
 &
     |1 + (E >< V) >< Ledger|
-        \ar[d]^{|id + id * (cataList f)|}
+        \ar[d]^{|id + id >< (cataList f)|}
 \\
     |Ledger|
 &
@@ -1046,11 +1046,29 @@ sem entidades repetidas. Resultando assim tres catamorfismos compostos: |allTran
         \ar[l]^-{|f = either nil nrm|}
 }
 \end{eqnarray*}
+\begin{eqnarray*}
+\xymatrix@@C=4cm{
+    |Ledger|
+        \ar[d]_-{|nrm|}
+        \ar[r]_-{|outT|}
+&
+    |1 + (E >< V) >< Ledger|
+        \ar[d]^-{|id + id >< nrm|}
+\\
+    |(E >< V) >< Ledger|
+&
+    |1 + (E >< V) >< ((E >< V) >< Ledger)|
+        \ar[l]^-{|either (split (const entity) nil) (cond ((uncurry (==)).(p1 >< p1.p1)) addE carryE)|}
+}
+\end{eqnarray*}
 \begin{code}
-normL = cataList (either nil nrm) where
-        nrm ((e,v), [])            = [(e,v)]
-        nrm ((e,v), ((el, vl):tl)) | e == el   = (el,v + vl) : tl
-                                   | otherwise = (el, vl) : (nrm ((e,v), tl))
+
+normL = cataList (either nil (cons.(uncurry nrm))) where
+        nrm entity = cataList (either f g) where
+            f = split (const entity) nil
+            g = cond ((uncurry (==)).(p1 >< p1.p1)) addE carryE where
+                addE   ((e,v),((et,vt),t)) = ((et,v+vt),t)
+                carryE ((e,v),((et,vt),t)) = ((et,vt),(e,v):t)
 
 t2l (f,(v,t)) = [(f,-v),(t,v)]
 
@@ -1061,10 +1079,10 @@ ledger = normL . (cataList (either nil (conc.(t2l >< id)))) . allTransactions
 \xymatrix@@C=4cm{
     |Blockchain|
            \ar[d]_-{|magic = cataBlockchainI g|}
-           \ar[r]_-{|outBlockchain|}
+           \ar[r]_-{|outT|}
 &
     |Block + Block >< Blockchain|
-           \ar[d]^{|id + id * (cataBlockchainI g)|}
+           \ar[d]^{|id + id >< (cataBlockchainI g)|}
 \\
      |[MagicNo]|
            \ar[d]_-{|perfect|}
@@ -1107,7 +1125,7 @@ instance Functor QTree where
 \xymatrix@@C=2cm{
     |QTree A|
            \ar[d]_-{|rotateQTree = cataQTreeI g|}
-           \ar[r]_-{|outQTree|}
+           \ar[r]_-{|outT|}
 &
     |(A >< (Int >< Int)) + (QTree A) power4|
            \ar[d]^{|id + (cataQTreeI g) power4|}
@@ -1129,7 +1147,7 @@ rotateQTree = cataQTree (either rotCell rotTrees) where
 \xymatrix@@C=2cm{
     |QTree A|
            \ar[d]_-{|scaleQTree = cataQTreeI g|}
-           \ar[r]_-{|outQTree|}
+           \ar[r]_-{|outT|}
 &
     |(A >< (Int >< Int)) + (QTree A) power4|
            \ar[d]^{|(id >< id) + (cataQTreeI g) power4|}
