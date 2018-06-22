@@ -1164,7 +1164,9 @@ compressQTree n t = anaQTree (seek.outP) ((depthQTree t) - n, t) where
 avgPixel = split avgColor avgSize where
         avgColor = p1.head -- escolhe a primeira porque não tenho maneira de fazer a media
         avgSize = ((`div`2) >< (`div`2)).(foldr (\(x1,y1) (x2,y2) -> (x1 + x2,y1 + y2)) (0,0)).(map p2)
-
+\end{code}
+\subsubsection*{outlineQTree}
+\begin{code}
 outlineQTree b = cataQTree (either f g) where
         f (k,(i,j)) = matrix j i (if b k then outl j i else false)
         outl sx sy (x,y) = x == sx || y == sy || x == 1 || y == 1
@@ -1414,7 +1416,7 @@ curr = (\(a,b,c,d) -> ((a,b),(c,d)))
 \end{code}
 
 \subsection*{Problema 4}
-
+\subsubsection*{Definições base}
 \begin{code}
 inFTree = either unit comp
 unit = Unit
@@ -1429,13 +1431,17 @@ hyloFTree g f = cataFTree g . anaFTree f
 
 instance Bifunctor FTree where
     bimap f g = cataFTree (inFTree . baseFTree f g id)
+\end{code}
 
-generatePTree = anaFTree (seed.outP) . (split id (const 1)) where
-    outP (0,s) = i1 ((),s)
-    outP (n,s) = i2 (pred n,s)
-    seed = p2 -|- (split p2 (split (id >< pitag) (id >< pitag)))
+\subsubsection*{generatePTree}
+\begin{code}
+generatePTree = anaFTree (plant.distl.(outNat >< id)) . (split id (const 1)) where
+    plant = p2 -|- (split p2 (split (id >< pitag) (id >< pitag)))
     pitag = (((sqrt 2) / 2) *)
+\end{code}
 
+\subsubsection*{drawPTree}
+\begin{code}
 drawPTree = cataFTree (either (singl.mksquare) trans) where
     mksquare = (uncurry rectangleSolid) . dup
     trans (a,(l,r)) = newRect : (zipWith (\b c -> Pictures [newRect, movel b, mover c]) l r) where
