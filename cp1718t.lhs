@@ -742,13 +742,6 @@ animatePTree n = animate window white draw
     where
     pics = drawPTree (generatePTree n)
     draw t = pics !! (floor (t/2))
-
-{-
-animatePTree n = display window white pics
-    where
-    pics = last $ drawPTree (generatePTree n)
-    -- draw t = pics !! (floor (t/2))
--}
 \end{code}
 %endif
 
@@ -1119,29 +1112,18 @@ outPixel (PixelRGBA8 r g b a) = (r,(g,(b,a)))
 invertQTree = fmap (inPixel.((255-) >< ((255-) >< ((255-) >< id))).outPixel)
 
 
-{-compressQTree n t = anaQTree (seek.(id >< outQTree)) ((depthQTree t) - n, t) where
-        seek = (
-        seek (_, (Cell n x y)) = i1 (n, (x, y))
-        seek (n, (Block a b c d)) = if (alt <= 0)
-                                    then i1 (destroy (Block a b c d))
-                                    else i2 ((nxt, a), ((nxt, b), ((nxt, c), (nxt, d))))
-                                    where nxt = pred n
--}
-
-compressQTree n t = seek ((depthQTree t) - n) t where
-        seek n t | n < 1       = cell (destroy t)
-        seek n (Cell a x y)    = (Cell a x y)
-        seek n (Block a b c d) = Block (seek (n-1) a) (seek (n-1) b) (seek (n-1) c) (seek (n-1) d)
+compressQTree n t = anaQTree (seek.outP) ((depthQTree t) - n, t) where
+        seek = ((either (destroy.p2) p2) -|- spreadlove)
+        spreadlove (n,(a,(b,(c,d)))) = ((n,a),((n,b),((n,c),(n,d))))
+        outP (n,a)       | n < 1 = i1 (i1 ((),a))
+        outP (n,(Cell a x y))    = i1 (i2 (n, (a,(x,y))))
+        outP (n,(Block a b c d)) = i2 (pred n, (a,(b,(c,d))))
         destroy = cataQTree (either id (avgPixel.pair2list))
+        pair2list (a,(b,(c,d))) = [a,b,c,d]
 
-avgPixel :: [(a,(Int,Int))] -> (a,(Int, Int))
 avgPixel = split avgColor avgSize where
         avgColor = p1.head -- escolhe a primeira porque não tenho maneira de fazer a media
-        avgSize = (split (divP.(split p1 (const 2))) (divP.(split p2 (const 2)))).(foldr addP (0,0)).(map p2)
-        divP = floor . (uncurry (/)) . (fromIntegral >< fromIntegral)
-        addP (x1,y1) (x2,y2) = (x1+x2,y1+y2)
-
-pair2list (a,(b,(c,d))) = [a,b,c,d]
+        avgSize = ((`div`2) >< (`div`2)).(foldr (\(x1,y1) (x2,y2) -> (x1 + x2,y1 + y2)) (0,0)).(map p2)
 
 outlineQTree b = cataQTree (either f g) where
         f (k,(i,j)) = matrix j i (if b k then outl j i else false)
@@ -1173,59 +1155,28 @@ hyloFTree g f = cataFTree g . anaFTree f
 instance Bifunctor FTree where
     bimap f g = cataFTree (inFTree . baseFTree f g id)
 
-
-generatePTree = anaFTree ((((const 10.0) -|- sqs)).outNat)
-    where
-        sqs = split (pitag.succ) dup
-        pitag = ((*) (20.0 / (sqrt 2.0))).fromIntegral
+generatePTree = anaFTree (seed.outP) . (split id (const 1)) where
+    outP (0,s) = i1 ((),s)
+    outP (n,s) = i2 (pred n,s)
+    seed = p2 -|- (split p2 (split (id >< pitag) (id >< pitag)))
+    pitag = (((sqrt 2) / 2) *)
 
 drawPTree = cataFTree (either (singl.mksquare) trans) where
-        mksquare = (uncurry rectangleSolid) . dup
-        trans (a,(l,r)) = newRect : (zipWith (\b c -> Pictures [newRect, movel b, mover c]) l r)
-            where
-                newRect = mksquare a
-                movel = ((Translate (-halfA) a).(Rotate (-45)))
-                mover = ((Translate   halfA  a).(Rotate   45 ))
-                halfA = a / 2.0
-
-
-{-
-mksquare [a,b,c,d] edge = Polygon [b,f,g,h] where
-        f = (edge                    * cos135 + (p1 b), edge                    * sin135 + (p2 b))
-        g = ((sqrt (2 * (edge ^ 2))) * cos90  + (p1 b), (sqrt (2 * (edge ^ 2))) * sin90  + (p2 b))
-        h = (edge                    * cos45  + (p1 b), edge                    * sin45  + (p2 b))
-        cos45  = (sqrt 2) / 2
-        cos90  = 0
-        cos135 = -cos45
-        sin45  = cos45
-        sin90  = 1
-        sin135 = -sin45
-
-
-drawPTree = (map Pictures) . reverse . mkmorelist . (split (mksquares . (split (Polygon . nil) id)) depthFTree) where
-        sq :: Picture -> Float -> Picture
-        sq (Polygon []) a = rectangleSolid a a
-        sq (Polygon pr) a = mksquare pr a
-        mksquares :: (Picture, PTree) -> [Picture]
-        mksquares (pr, Unit a) = [sq pr a]
-        mksquares (pr, Comp a l r) = s : (mksquares (s,l))-- ++ (mksquares (revS s,r))
-            where
-                s = sq pr a
-                revS (Polygon p) = Polygon $ (drop 2 p) ++ (take 2 p)
--}
--- isto pode ser um ana
-mkmorelist :: ([a], Int) -> [[a]]
-mkmorelist (l, 0) = [take 1 l]
-mkmorelist (l, n) = take (sum [2 ^ x | x <- [1..n]]) l : mkmorelist (l, (pred n))
-
+    mksquare = (uncurry rectangleSolid) . dup
+    trans (a,(l,r)) = newRect : (zipWith (\b c -> Pictures [newRect, movel b, mover c]) l r) where
+        newRect = mksquare a
+        movel = ((Translate (-(a / 2)) a).(Rotate (-45)))
+        mover = ((Translate   (a / 2)  a).(Rotate   45 ))
 \end{code}
 
 \subsection*{Problema 5}
 
 \begin{code}
-singletonbag = undefined
-muB = undefined
-dist = undefined
+singletonbag = B . singl . split id (const 1)
+muB = B . concat . (fmap ((\ (a,b) -> map (id >< (*b)) a))) . unB . (fmap unB)
+dist a = (D . (fmap (id >< ((/tot).fromIntegral) )) . unB) a where
+    tot = fromIntegral $ numberM a
+    numberM = (cataList (either (const 0) ((uncurry (+)).(p2 >< id)))) . unB
 \end{code}
 
 \section{Como exprimir cálculos e diagramas em LaTeX/lhs2tex}
@@ -1252,8 +1203,8 @@ Estudar o texto fonte deste trabalho para obter o efeito:\footnote{Exemplos tira
 \qed
 \end{eqnarray*}
 
-Os diagramas podem ser produzidos recorrendo à \emph{package} \LaTeX\ 
-\href{https://ctan.org/pkg/xymatrix}{xymatrix}, por exemplo: 
+Os diagramas podem ser produzidos recorrendo à \emph{package} \LaTeX\
+\href{https://ctan.org/pkg/xymatrix}{xymatrix}, por exemplo:
 \begin{eqnarray*}
 \xymatrix@@C=2cm{
     |Nat0|
@@ -1325,7 +1276,7 @@ instance Arbitrary SmallNat where
     | x' <- shrink x
     , x' >= 0, x' <= 10
     ]
-    
+
 instance Arbitrary a => Arbitrary (Matrix a) where
   arbitrary = do
     rows <- QuickCheck.choose (0,100)

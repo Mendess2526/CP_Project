@@ -1480,29 +1480,12 @@ sem entidades repetidas. Resultando assim tres catamorfismos compostos: \ensurem
 \ColumnHook
 \end{hscode}\resethooks
 \subsubsection*{rotateQTree}
-\begin{eqnarray*}
-\xymatrix@C=4cm{
-    \ensuremath{\Conid{Blockchain}}
-           \ar[d]_-{\ensuremath{\Varid{magic}\mathrel{=}\cata{\Varid{g}}}}
-&
-    \ensuremath{\Conid{Block}\mathbin{+}\Conid{Block}\mathbin{*}\Conid{Blockchain}}
-           \ar[d]^{\ensuremath{\Varid{id}\mathbin{+}\Varid{id}\mathbin{*}\cata{\Varid{g}}}}
-           \ar[l]_-{\ensuremath{\Varid{inBlockchain}}}
-\\
-     \ensuremath{[\mskip1.5mu \Conid{MagicNo}\mskip1.5mu]}
-           \ar[d]_-{\ensuremath{\Varid{perfect}}}
-&
-     \ensuremath{\Conid{Block}\mathbin{+}\Conid{Block}\times[\mskip1.5mu \Conid{MagicNo}\mskip1.5mu]}
-           \ar[l]^-{\ensuremath{\Varid{g}\mathrel{=}\alt{\Varid{singl}\comp \p1}{\Varid{cons}\comp (\p1\times\Varid{id})}}}
-\\
-     \ensuremath{\Conid{Bool}}
-}
-\end{eqnarray*}
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{8}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{9}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{32}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{26}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{34}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{rotateQTree}\mathrel{=}\Varid{cataQTree}\;\alt{\Varid{rotCell}}{\Varid{rotTrees}}\;\mathbf{where}{}\<[E]%
 \\
@@ -1523,42 +1506,38 @@ sem entidades repetidas. Resultando assim tres catamorfismos compostos: \ensurem
 \\
 \>[B]{}\Varid{invertQTree}\mathrel{=}\mathsf{fmap}\;(\Varid{inPixel}\comp ((\mathrm{255}\mathbin{-})\times((\mathrm{255}\mathbin{-})\times((\mathrm{255}\mathbin{-})\times\Varid{id})))\comp \Varid{outPixel}){}\<[E]%
 \\[\blanklineskip]%
-\>[B]{}\Varid{compressQTree}\;\Varid{n}\;\Varid{t}\mathrel{=}\Varid{seek}\;((\Varid{depthQTree}\;\Varid{t})\mathbin{-}\Varid{n})\;\Varid{t}\;\mathbf{where}{}\<[E]%
+\>[B]{}\Varid{compressQTree}\;\Varid{n}\;\Varid{t}\mathrel{=}\Varid{anaQTree}\;(\Varid{seek}\comp \Varid{outP})\;((\Varid{depthQTree}\;\Varid{t})\mathbin{-}\Varid{n},\Varid{t})\;\mathbf{where}{}\<[E]%
 \\
 \>[B]{}\hsindent{9}{}\<[9]%
-\>[9]{}\Varid{seek}\;\Varid{n}\;\Varid{t}\mid \Varid{n}\mathbin{<}\mathrm{1}{}\<[32]%
-\>[32]{}\mathrel{=}\Varid{cell}\;(\Varid{destroy}\;\Varid{t}){}\<[E]%
+\>[9]{}\Varid{seek}\mathrel{=}(\alt{\Varid{destroy}\comp \p2}{\p2}+\Varid{spreadlove}){}\<[E]%
 \\
 \>[B]{}\hsindent{9}{}\<[9]%
-\>[9]{}\Varid{seek}\;\Varid{n}\;(\Conid{Cell}\;\Varid{a}\;\Varid{x}\;\Varid{y}){}\<[32]%
-\>[32]{}\mathrel{=}(\Conid{Cell}\;\Varid{a}\;\Varid{x}\;\Varid{y}){}\<[E]%
+\>[9]{}\Varid{spreadlove}\;(\Varid{n},(\Varid{a},(\Varid{b},(\Varid{c},\Varid{d}))))\mathrel{=}((\Varid{n},\Varid{a}),((\Varid{n},\Varid{b}),((\Varid{n},\Varid{c}),(\Varid{n},\Varid{d})))){}\<[E]%
 \\
 \>[B]{}\hsindent{9}{}\<[9]%
-\>[9]{}\Varid{seek}\;\Varid{n}\;(\Conid{Block}\;\Varid{a}\;\Varid{b}\;\Varid{c}\;\Varid{d})\mathrel{=}\Conid{Block}\;(\Varid{seek}\;(\Varid{n}\mathbin{-}\mathrm{1})\;\Varid{a})\;(\Varid{seek}\;(\Varid{n}\mathbin{-}\mathrm{1})\;\Varid{b})\;(\Varid{seek}\;(\Varid{n}\mathbin{-}\mathrm{1})\;\Varid{c})\;(\Varid{seek}\;(\Varid{n}\mathbin{-}\mathrm{1})\;\Varid{d}){}\<[E]%
+\>[9]{}\Varid{outP}\;(\Varid{n},\Varid{a}){}\<[26]%
+\>[26]{}\mid \Varid{n}\mathbin{<}\mathrm{1}\mathrel{=}i_1\;(i_1\;((),\Varid{a})){}\<[E]%
 \\
 \>[B]{}\hsindent{9}{}\<[9]%
-\>[9]{}\Varid{destroy}\mathbin{::}\Conid{QTree}\;\Varid{a}\to (\Varid{a},(\Conid{Int},\Conid{Int})){}\<[E]%
+\>[9]{}\Varid{outP}\;(\Varid{n},(\Conid{Cell}\;\Varid{a}\;\Varid{x}\;\Varid{y})){}\<[34]%
+\>[34]{}\mathrel{=}i_1\;(i_2\;(\Varid{n},(\Varid{a},(\Varid{x},\Varid{y})))){}\<[E]%
+\\
+\>[B]{}\hsindent{9}{}\<[9]%
+\>[9]{}\Varid{outP}\;(\Varid{n},(\Conid{Block}\;\Varid{a}\;\Varid{b}\;\Varid{c}\;\Varid{d}))\mathrel{=}i_2\;(\Varid{pred}\;\Varid{n},(\Varid{a},(\Varid{b},(\Varid{c},\Varid{d})))){}\<[E]%
 \\
 \>[B]{}\hsindent{9}{}\<[9]%
 \>[9]{}\Varid{destroy}\mathrel{=}\Varid{cataQTree}\;\alt{\Varid{id}}{\Varid{avgPixel}\comp \Varid{pair2list}}{}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\Varid{avgPixel}\mathbin{::}[\mskip1.5mu (\Varid{a},(\Conid{Int},\Conid{Int}))\mskip1.5mu]\to (\Varid{a},(\Conid{Int},\Conid{Int})){}\<[E]%
 \\
+\>[B]{}\hsindent{9}{}\<[9]%
+\>[9]{}\Varid{pair2list}\;(\Varid{a},(\Varid{b},(\Varid{c},\Varid{d})))\mathrel{=}[\mskip1.5mu \Varid{a},\Varid{b},\Varid{c},\Varid{d}\mskip1.5mu]{}\<[E]%
+\\[\blanklineskip]%
 \>[B]{}\Varid{avgPixel}\mathrel{=}\conj{\Varid{avgColor}}{\Varid{avgSize}}\;\mathbf{where}{}\<[E]%
 \\
 \>[B]{}\hsindent{9}{}\<[9]%
 \>[9]{}\Varid{avgColor}\mathrel{=}\p1\comp \Varid{head}\mbox{\onelinecomment  escolhe a primeira porque não tenho maneira de fazer a media}{}\<[E]%
 \\
 \>[B]{}\hsindent{9}{}\<[9]%
-\>[9]{}\Varid{avgSize}\mathrel{=}\conj{\Varid{divP}\comp \conj{\p1}{\underline{\mathrm{2}}}}{\Varid{divP}\comp \conj{\p2}{\underline{\mathrm{2}}}}\comp (\Varid{foldr}\;\Varid{addP}\;(\mathrm{0},\mathrm{0}))\comp (\map \;\p2){}\<[E]%
-\\
-\>[B]{}\hsindent{9}{}\<[9]%
-\>[9]{}\Varid{divP}\mathrel{=}\Varid{floor}\comp \uncurry{(\mathbin{/})}\comp (\Varid{fromIntegral}\times\Varid{fromIntegral}){}\<[E]%
-\\
-\>[B]{}\hsindent{9}{}\<[9]%
-\>[9]{}\Varid{addP}\;(\Varid{x1},\Varid{y1})\;(\Varid{x2},\Varid{y2})\mathrel{=}(\Varid{x1}\mathbin{+}\Varid{x2},\Varid{y1}\mathbin{+}\Varid{y2}){}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\Varid{pair2list}\;(\Varid{a},(\Varid{b},(\Varid{c},\Varid{d})))\mathrel{=}[\mskip1.5mu \Varid{a},\Varid{b},\Varid{c},\Varid{d}\mskip1.5mu]{}\<[E]%
+\>[9]{}\Varid{avgSize}\mathrel{=}((\mathbin{\Varid{`div`}}\mathrm{2})\times(\mathbin{\Varid{`div`}}\mathrm{2}))\comp (\Varid{foldr}\;(\lambda (\Varid{x1},\Varid{y1})\;(\Varid{x2},\Varid{y2})\to (\Varid{x1}\mathbin{+}\Varid{x2},\Varid{y1}\mathbin{+}\Varid{y2}))\;(\mathrm{0},\mathrm{0}))\comp (\map \;\p2){}\<[E]%
 \\[\blanklineskip]%
 \>[B]{}\Varid{outlineQTree}\;\Varid{b}\mathrel{=}\Varid{cataQTree}\;\alt{\Varid{f}}{\Varid{g}}\;\mathbf{where}{}\<[E]%
 \\
@@ -1590,11 +1569,10 @@ sem entidades repetidas. Resultando assim tres catamorfismos compostos: \ensurem
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{5}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{9}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{13}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{17}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{25}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{59}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{66}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{31}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{40}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{53}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{inFTree}\mathrel{=}\alt{\Varid{unit}}{\Varid{comp}}{}\<[E]%
 \\
@@ -1622,53 +1600,39 @@ sem entidades repetidas. Resultando assim tres catamorfismos compostos: \ensurem
 \>[B]{}\hsindent{5}{}\<[5]%
 \>[5]{}\Varid{bimap}\;\Varid{f}\;\Varid{g}\mathrel{=}\Varid{cataFTree}\;(\Varid{inFTree}\comp \Varid{baseFTree}\;\Varid{f}\;\Varid{g}\;\Varid{id}){}\<[E]%
 \\[\blanklineskip]%
-\>[B]{}\Varid{generatePTree}\mathrel{=}\Varid{anaFTree}\;(((\underline{\mathrm{1.0}}+\Varid{sqs}))\comp \Varid{outNat}){}\<[E]%
+\>[B]{}\Varid{generatePTree}\mathrel{=}\Varid{anaFTree}\;(\Varid{seed}\comp \Varid{outP})\comp \conj{\Varid{id}}{\underline{\mathrm{1}}}\;\mathbf{where}{}\<[E]%
 \\
 \>[B]{}\hsindent{5}{}\<[5]%
-\>[5]{}\mathbf{where}{}\<[E]%
+\>[5]{}\Varid{outP}\;(\mathrm{0},\Varid{s})\mathrel{=}i_1\;((),\Varid{s}){}\<[E]%
+\\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\Varid{outP}\;(\Varid{n},\Varid{s})\mathrel{=}i_2\;(\Varid{pred}\;\Varid{n},\Varid{s}){}\<[E]%
+\\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\Varid{seed}\mathrel{=}\p2+\conj{\p2}{\conj{\Varid{id}\times\Varid{pitag}}{\Varid{id}\times\Varid{pitag}}}{}\<[E]%
+\\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\Varid{pitag}\mathrel{=}(((\Varid{sqrt}\;\mathrm{2})\mathbin{/}\mathrm{2})\mathbin{*}){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{drawPTree}\mathrel{=}\Varid{cataFTree}\;\alt{\Varid{singl}\comp \Varid{mksquare}}{\Varid{trans}}\;\mathbf{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\Varid{mksquare}\mathrel{=}\uncurry{\Varid{rectangleSolid}}\comp \Varid{dup}{}\<[E]%
+\\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\Varid{trans}\;(\Varid{a},(\Varid{l},\Varid{r}))\mathrel{=}\Varid{newRect}\mathbin{:}(\Varid{zipWith}\;(\lambda \Varid{b}\;\Varid{c}\to \Conid{Pictures}\;[\mskip1.5mu \Varid{newRect},\Varid{movel}\;\Varid{b},\Varid{mover}\;\Varid{c}\mskip1.5mu])\;\Varid{l}\;\Varid{r})\;\mathbf{where}{}\<[E]%
 \\
 \>[5]{}\hsindent{4}{}\<[9]%
-\>[9]{}\Varid{sqs}\mathrel{=}\conj{\Varid{pitag}\comp \succ }{\Varid{dup}}{}\<[E]%
+\>[9]{}\Varid{newRect}\mathrel{=}\Varid{mksquare}\;\Varid{a}{}\<[E]%
 \\
 \>[5]{}\hsindent{4}{}\<[9]%
-\>[9]{}\Varid{pitag}\mathrel{=}\uncurry{(\mathbin{*})}\comp \conj{\Varid{pitagConst}}{\Varid{fromIntegral}}{}\<[E]%
+\>[9]{}\Varid{movel}\mathrel{=}((\Conid{Translate}\;(\mathbin{-}(\Varid{a}\mathbin{/}\mathrm{2}))\;\Varid{a})\comp (\Conid{Rotate}\;(\mathbin{-}\mathrm{45}))){}\<[E]%
 \\
 \>[5]{}\hsindent{4}{}\<[9]%
-\>[9]{}\Varid{pitagConst}\mathrel{=}\underline{(\mathrm{2.0}\mathbin{*}(\Varid{sqrt}\;\mathrm{2.0}))}{}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\Varid{drawPTree}\mathrel{=}\Varid{cataFTree}\;\alt{\Varid{singl}}{\Varid{trans}}\comp \Varid{picureTree}\;\mathbf{where}{}\<[E]%
-\\
-\>[B]{}\hsindent{9}{}\<[9]%
-\>[9]{}\Varid{trans}\;(\Varid{a},(\Varid{l},\Varid{r}))\mathrel{=}\Varid{a}\mathbin{:}\Varid{movel}\;\Varid{l}\plus \Varid{mover}\;\Varid{r}{}\<[E]%
-\\
-\>[9]{}\hsindent{4}{}\<[13]%
-\>[13]{}\mathbf{where}{}\<[E]%
-\\
-\>[13]{}\hsindent{4}{}\<[17]%
-\>[17]{}\Varid{movel}\mathrel{=}\map \;(\lambda \Varid{h}\to \Conid{Rotate}\;\mathrm{45}\;(\Conid{Translate}\;(\mathbin{-}\Varid{halfA})\;(\Varid{halfA}\mathbin{+}\Varid{sqrt}\;((\Varid{width}\;\Varid{h})\mathbin{\uparrow}\mathrm{2})\mathbin{/}\mathrm{2})\;\Varid{h})){}\<[E]%
-\\
-\>[13]{}\hsindent{4}{}\<[17]%
-\>[17]{}\Varid{mover}\mathrel{=}\map \;(\lambda \Varid{h}\to \Conid{Rotate}\;\mathrm{45}\;(\Conid{Translate}\;{}\<[59]%
-\>[59]{}\Varid{halfA}\;{}\<[66]%
-\>[66]{}(\Varid{halfA}\mathbin{+}\Varid{sqrt}\;((\Varid{width}\;\Varid{h})\mathbin{\uparrow}\mathrm{2})\mathbin{/}\mathrm{2})\;\Varid{h})){}\<[E]%
-\\
-\>[13]{}\hsindent{4}{}\<[17]%
-\>[17]{}\Varid{halfA}\mathrel{=}((\Varid{width}\;\Varid{a})\mathbin{/}\mathrm{2.0}){}\<[E]%
-\\
-\>[13]{}\hsindent{4}{}\<[17]%
-\>[17]{}\Varid{width}\;(\Conid{Polygon}\;(\anonymous \mathbin{:}\Varid{side}\mathbin{:}\Varid{t}))\mathrel{=}\Varid{abs}\;((\p1\;\Varid{side})\mathbin{-}(\p2\;\Varid{side})){}\<[E]%
-\\
-\>[13]{}\hsindent{4}{}\<[17]%
-\>[17]{}\Varid{width}\;(\Conid{Translate}\;\anonymous \;\anonymous \;\Varid{p})\mathrel{=}\Varid{width}\;\Varid{p}{}\<[E]%
-\\
-\>[13]{}\hsindent{4}{}\<[17]%
-\>[17]{}\Varid{width}\;(\Conid{Rotate}\;\anonymous \;\Varid{p})\mathrel{=}\Varid{width}\;\Varid{p}{}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\Varid{picureTree}\mathbin{::}\Conid{PTree}\to \Conid{FTree}\;\Conid{Picture}\;\Conid{Picture}{}\<[E]%
-\\
-\>[B]{}\Varid{picureTree}\mathrel{=}\Varid{bimap}\;\Varid{mksquare}\;\Varid{mksquare}{}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\Varid{mksquare}\mathrel{=}\uncurry{\Varid{rectangleSolid}}\comp \Varid{dup}{}\<[E]%
+\>[9]{}\Varid{mover}\mathrel{=}((\Conid{Translate}\;{}\<[31]%
+\>[31]{}(\Varid{a}\mathbin{/}\mathrm{2})\;{}\<[40]%
+\>[40]{}\Varid{a})\comp (\Conid{Rotate}\;{}\<[53]%
+\>[53]{}\mathrm{45})){}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
@@ -1676,17 +1640,24 @@ sem entidades repetidas. Resultando assim tres catamorfismos compostos: \ensurem
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{singletonbag}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{singletonbag}\mathrel{=}\mathit B\comp \Varid{singl}\comp \conj{\Varid{id}}{\underline{\mathrm{1}}}{}\<[E]%
 \\
-\>[B]{}\mu \mathrel{=}\bot {}\<[E]%
+\>[B]{}\mu \mathrel{=}\mathit B\comp \Varid{concat}\comp (\mathsf{fmap}\;((\lambda (\Varid{a},\Varid{b})\to \map \;(\Varid{id}\times(\mathbin{*}\Varid{b}))\;\Varid{a})))\comp \Varid{unB}\comp (\mathsf{fmap}\;\Varid{unB}){}\<[E]%
 \\
-\>[B]{}\Varid{dist}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{dist}\;\Varid{a}\mathrel{=}(\Conid{D}\comp (\mathsf{fmap}\;(\Varid{id}\times((\mathbin{/}\Varid{tot})\comp \Varid{fromIntegral})))\comp \Varid{unB})\;\Varid{a}\;\mathbf{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\Varid{tot}\mathrel{=}\Varid{fromIntegral}\mathbin{\$}\Varid{numberM}\;\Varid{a}{}\<[E]%
+\\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\Varid{numberM}\mathrel{=}\cata{\alt{\underline{\mathrm{0}}}{\uncurry{(\mathbin{+})}\comp (\p2\times\Varid{id})}}\comp \Varid{unB}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
 \section{Como exprimir cálculos e diagramas em LaTeX/lhs2tex}
-Estudar o texto fonte deste trabalho para obter o efeito:\footnote{Exemplos tirados de \cite{Ol18}.} 
+Estudar o texto fonte deste trabalho para obter o efeito:\footnote{Exemplos tirados de \cite{Ol18}.}
 \begin{eqnarray*}
 \start
 	\ensuremath{\Varid{id}\mathrel{=}\conj{\Varid{f}}{\Varid{g}}}
@@ -1701,8 +1672,8 @@ Estudar o texto fonte deste trabalho para obter o efeito:\footnote{Exemplos tira
 \qed
 \end{eqnarray*}
 
-Os diagramas podem ser produzidos recorrendo à \emph{package} \LaTeX\ 
-\href{https://ctan.org/pkg/xymatrix}{xymatrix}, por exemplo: 
+Os diagramas podem ser produzidos recorrendo à \emph{package} \LaTeX\
+\href{https://ctan.org/pkg/xymatrix}{xymatrix}, por exemplo:
 \begin{eqnarray*}
 \xymatrix@C=2cm{
     \ensuremath{\N_0}
