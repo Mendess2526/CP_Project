@@ -61,6 +61,7 @@
 %format inNat = "\mathsf{in}"
 %format (cataNat (g)) = "\cata{" g "}"
 %format (cataBlockchainI (g)) = "\cata{" g "}"
+%format (cataQTreeI (g)) = "\cata{" g "}"
 %format (cataList (g)) = "\cata{" g "}"
 %format Nat0 = "\N_0"
 %format muB = "\mu "
@@ -79,6 +80,7 @@
 %format .<==>. = "\Leftrightarrow"
 %format .==. = "\equiv"
 %format .<=. = "\leq"
+%format power4 = "^4"
 
 %---------------------------------------------------------------------------
 
@@ -1058,7 +1060,7 @@ ledger = normL . (cataList (either nil (conc.(t2l >< id)))) . allTransactions
     |Blockchain|
            \ar[d]_-{|magic = cataBlockchainI g|}
 &
-    |Block + Block * Blockchain|
+    |Block + Block >< Blockchain|
            \ar[d]^{|id + id * (cataBlockchainI g)|}
            \ar[l]_-{|inBlockchain|}
 \\
@@ -1099,19 +1101,57 @@ instance Functor QTree where
     fmap f = cataQTree ( inQTree . baseQTree f id)
 \end{code}
 \subsubsection*{rotateQTree}
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |QTree A|
+           \ar[d]_-{|rotateQTree = cataQTreeI g|}
+&
+    |(A >< (Int >< Int)) + (A >< (Int, Int)) >< (QTree A) power4|
+           \ar[d]^{|id + (cataQTreeI g) power4|}
+           \ar[l]_-{|inQTree|}
+\\
+    |QTree A|
+&
+    |(A >< (Int >< Int)) + (A >< (Int, Int)) >< (QTree A) power4|
+           \ar[l]^-{|g = either rotCell rotTrees|}
+}
+\end{eqnarray*}
 \begin{code}
 rotateQTree = cataQTree (either rotCell rotTrees) where
        rotCell = cell.(id >< swap)
        rotTrees (a, (b, (c, d))) = Block c a d b
 
+\end{code}
+\subsubsection*{scaleQTree}
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |QTree A|
+           \ar[d]_-{|scaleQTree = cataQTreeI g|}
+&
+    |(A >< (Int >< Int)) + (A >< (Int, Int)) >< (QTree A) power4|
+           \ar[d]^{|id + (cataQTreeI g) power4|}
+           \ar[l]_-{|inQTree|}
+\\
+    |QTree A|
+&
+    |(A >< (Int >< Int)) + (A >< (Int, Int)) >< (QTree A) power4|
+           \ar[l]^-{|g = either scaleCell block|}
+}
+\end{eqnarray*}
+\begin{code}
 scaleQTree s = cataQTree (either scaleCell block) where
         scaleCell = cell.(id >< ((s*) >< (s*)))
 
+\end{code}
+\subsubsection*{invertQTree}
+\begin{code}
 inPixel (r,(g,(b,a))) = PixelRGBA8 r g b a
 outPixel (PixelRGBA8 r g b a) = (r,(g,(b,a)))
 invertQTree = fmap (inPixel.((255-) >< ((255-) >< ((255-) >< id))).outPixel)
+\end{code}
 
-
+\subsubsection*{compressQTree}
+\begin{code}
 compressQTree n t = anaQTree (seek.outP) ((depthQTree t) - n, t) where
         seek = ((either (destroy.p2) p2) -|- spreadlove)
         spreadlove (n,(a,(b,(c,d)))) = ((n,a),((n,b),((n,c),(n,d))))
