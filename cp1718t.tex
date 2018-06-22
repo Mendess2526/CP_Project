@@ -1553,13 +1553,165 @@ sem entidades repetidas. Resultando assim tres catamorfismos compostos: \ensurem
 \end{hscode}\resethooks
 
 \subsection*{Problema 3}
+Seguindo a sugestão do enunciado, aplicou-se a lei de Fokkinga a \textit{f k} e \textit{l k}:
+
+\begin{eqnarray*}
+\start
+\ensuremath{\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}}
+%
+\just\equiv{ Fokkinga }
+%
+    \ensuremath{\begin{lcbr}((\Varid{f}\;\Varid{k})\comp \mathbf{in}\;)\mathrel{=}(\Varid{h}\comp (\Varid{id}\mathbin{+}\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}))\\((\Varid{l}\;\Varid{k})\comp \mathbf{in}\;)\mathrel{=}(\Varid{y}\comp (\Varid{id}\mathbin{+}\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}))\end{lcbr}}
+%
+\just\equiv{ Def-\ensuremath{\mathbin{+}} }
+%
+    \ensuremath{\begin{lcbr}((\Varid{f}\;\Varid{k})\comp \mathbf{in}\;)\mathrel{=}(\Varid{h}\comp \alt{i_1\comp \Varid{id}}{i_2\comp \conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}})\\((\Varid{l}\;\Varid{k})\comp \mathbf{in}\;)\mathrel{=}(\Varid{y}\comp \alt{i_1\comp \Varid{id}}{i_2\comp \conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}})\end{lcbr}}
+%
+\just\equiv{ Fusão-\ensuremath{\mathbin{+}}, Natural-\ensuremath{\Varid{id}}, inNats, Eq+ }
+%
+    \ensuremath{\begin{lcbr}((\Varid{f}\;\Varid{k})\comp \underline{\mathrm{0}})\mathrel{=}(\Varid{h}\comp i_1)\\((\Varid{f}\;\Varid{k})\comp \succ )\mathrel{=}(\Varid{h}\comp i_2\comp \conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}})\end{lcbr}}
+    \ensuremath{\begin{lcbr}((\Varid{l}\;\Varid{k})\comp \underline{\mathrm{0}})\mathrel{=}(\Varid{y}\comp i_1)\\((\Varid{l}\;\Varid{k})\comp \succ )\mathrel{=}(\Varid{y}\comp i_2\comp \conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}})\end{lcbr}}
+%
+\just\equiv{ Cancelamento-\ensuremath{\mathbin{+}}, \ensuremath{\Varid{h}\mathrel{=}\alt{\Varid{h1}}{\Varid{h2}}}, \ensuremath{\Varid{y}\mathrel{=}\alt{\Varid{y1}}{\Varid{y2}}} }
+%
+    \ensuremath{\begin{lcbr}((\Varid{f}\;\Varid{k})\comp \underline{\mathrm{0}})\mathrel{=}\Varid{h1}\\((\Varid{f}\;\Varid{k})\comp \succ )\mathrel{=}(\Varid{h2}\comp \conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}})\end{lcbr}}
+    \ensuremath{\begin{lcbr}((\Varid{l}\;\Varid{k})\comp \underline{\mathrm{0}})\mathrel{=}\Varid{y1}\\((\Varid{l}\;\Varid{k})\comp \succ )\mathrel{=}(\Varid{y2}\comp \conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}})\end{lcbr}}
+%
+\qed
+\end{eqnarray*}
+
+
+Derivando \textit{h}:
+\begin{eqnarray*}
+\start
+%
+    \ensuremath{\begin{lcbr}((\Varid{f}\;\Varid{k})\comp \underline{\mathrm{0}})\mathrel{=}\Varid{h1}\\((\Varid{f}\;\Varid{k})\comp \succ )\mathrel{=}(\Varid{h2}\comp \conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}})\end{lcbr}}
+%
+\just\equiv{ Como são precedidas por uma injeção }
+%
+    \ensuremath{\begin{lcbr}((\Varid{f}\;\Varid{k})\comp \underline{\mathrm{0}})\mathrel{=}(\alt{\Varid{h1}}{\Varid{h2}}\comp i_1)\\((\Varid{f}\;\Varid{k})\comp \succ )\mathrel{=}(\alt{\Varid{h1}}{\Varid{h2}}\comp i_2\comp \conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}})\end{lcbr}}
+%
+\just\equiv{ Comparando com a função do enunciado }
+%
+\ensuremath{\Varid{h}\mathrel{=}\alt{\underline{\mathrm{1}}}{\Varid{mul}}}
+%
+\qed
+\end{eqnarray*}
+
+
+Derivando \textit{y}:
+\begin{eqnarray*}
+\start
+%
+  \ensuremath{\begin{lcbr}((\Varid{l}\;\Varid{k})\comp \underline{\mathrm{0}})\mathrel{=}\Varid{y1}\\((\Varid{l}\;\Varid{k})\comp \succ )\mathrel{=}(\Varid{y2}\comp \conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}})\end{lcbr}}
+%
+\just\equiv{ Como são precedidas por uma injeção }
+%
+\ensuremath{\begin{lcbr}((\Varid{l}\;\Varid{k})\comp \underline{\mathrm{0}})\mathrel{=}(\alt{\Varid{y1}}{\Varid{y2}}\comp i_1)\\((\Varid{l}\;\Varid{k})\comp \succ )\mathrel{=}(\alt{\Varid{y1}}{\Varid{y2}}\comp i_2\comp \conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}})\end{lcbr}}
+%
+\just\equiv{ Comparando com a função do enunciado }
+%
+\ensuremath{\Varid{y}\mathrel{=}\alt{\succ \comp \underline{\Varid{k}}}{\succ \comp \p2}}
+\qed
+\end{eqnarray*}
+
+Conclui-se que:
+\begin{eqnarray*}
+\ensuremath{\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}\mathrel{=}\cata{\conj{\alt{\underline{\mathrm{1}}}{\Varid{mul}}}{\alt{\succ \comp \underline{\Varid{k}}}{\succ \comp \p2}}}}
+\qed
+\end{eqnarray*}
+
+Aplicando a lei de Fokkinga às funções \textit{g} e \textit{s}.
+\begin{eqnarray*}
+\start
+\ensuremath{\conj{\Varid{g}}{\Varid{s}}}
+%
+\just\equiv{ Fokkinga }
+%
+    \ensuremath{\begin{lcbr}(\Varid{g}\comp \mathbf{in}\;)\mathrel{=}(\Varid{m}\comp (\Varid{id}\mathbin{+}\conj{\Varid{g}}{\Varid{s}}))\\(\Varid{s}\comp \mathbf{in}\;)\mathrel{=}(\Varid{j}\comp (\Varid{id}\mathbin{+}\conj{\Varid{g}}{\Varid{s}}))\end{lcbr}}
+%
+\just\equiv{ Def+ }
+%
+    \ensuremath{\begin{lcbr}(\Varid{g}\comp \mathbf{in}\;)\mathrel{=}(\Varid{m}\comp \alt{i_1\comp \Varid{id}}{i_2\comp \conj{\Varid{g}}{\Varid{s}}})\\(\Varid{s}\comp \mathbf{in}\;)\mathrel{=}(\Varid{j}\comp \alt{i_1\comp \Varid{id}}{i_2\comp \conj{\Varid{g}}{\Varid{s}}})\end{lcbr}}
+%
+\just\equiv{ Fusão+, Natural-id, inNats, Eq+ }
+%
+    \ensuremath{\begin{lcbr}(\Varid{g}\comp \underline{\mathrm{0}})\mathrel{=}(\Varid{m}\comp i_1)\\(\Varid{g}\comp \succ )\mathrel{=}(\Varid{m}\comp i_2\comp \conj{\Varid{g}}{\Varid{s}})\end{lcbr}}
+    \ensuremath{\begin{lcbr}(\Varid{s}\comp \underline{\mathrm{0}})\mathrel{=}(\Varid{j}\comp i_1)\\(\Varid{s}\comp \succ )\mathrel{=}(\Varid{j}\comp i_2\comp \conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}})\end{lcbr}}
+%
+\just\equiv{ Cancelamento+, \ensuremath{\Varid{m}\mathrel{=}\alt{\Varid{m1}}{\Varid{m2}}}, \ensuremath{\Varid{j}\mathrel{=}\alt{\Varid{j1}}{\Varid{j2}}} }
+%
+    \ensuremath{\begin{lcbr}(\Varid{g}\comp \underline{\mathrm{0}})\mathrel{=}\Varid{m1}\\(\Varid{g}\comp \succ )\mathrel{=}(\Varid{m2}\comp \conj{\Varid{g}}{\Varid{s}})\end{lcbr}}
+    \ensuremath{\begin{lcbr}(\Varid{s}\comp \underline{\mathrm{0}})\mathrel{=}\Varid{j1}\\(\Varid{s}\comp \succ )\mathrel{=}(\Varid{j2}\comp \conj{\Varid{g}}{\Varid{s}})\end{lcbr}}
+\qed
+\end{eqnarray*}
+
+Derivando \textit{m}:
+\begin{eqnarray*}
+\start
+%
+\ensuremath{\begin{lcbr}(\Varid{g}\comp \underline{\mathrm{0}})\mathrel{=}\Varid{m1}\\(\Varid{g}\comp \succ )\mathrel{=}(\Varid{m2}\comp \conj{\Varid{g}}{\Varid{s}})\end{lcbr}}
+%
+\just\equiv{ Como são precedidas por uma injeção }
+%
+\ensuremath{\begin{lcbr}(\Varid{g}\comp \underline{\mathrm{0}})\mathrel{=}(\alt{\Varid{m1}}{\Varid{m2}}\comp i_1)\\(\Varid{g}\comp \succ )\mathrel{=}(\alt{\Varid{m1}}{\Varid{m2}}\comp i_2\comp \conj{\Varid{g}}{\Varid{s}})\end{lcbr}}
+%
+\just\equiv{ Comparando com a função do enunciado }
+%
+\ensuremath{\Varid{m}\mathrel{=}\alt{\underline{\mathrm{1}}}{\uncurry{(\mathbin{*})}}}
+%
+\qed
+\end{eqnarray*}
+
+Derivando \textit{j}:
+
+\begin{eqnarray*}
+\start
+%
+    \ensuremath{\begin{lcbr}(\Varid{s}\comp \underline{\mathrm{0}})\mathrel{=}\Varid{j1}\\(\Varid{s}\comp \succ )\mathrel{=}(\Varid{j2}\comp \conj{\Varid{g}}{\Varid{s}})\end{lcbr}}
+%
+\just\equiv{ Como são precedidas por uma injeção }
+%
+  \ensuremath{\begin{lcbr}(\Varid{s}\comp \underline{\mathrm{0}})\mathrel{=}(\alt{\Varid{j1}}{\Varid{j2}}\comp i_1)\\(\Varid{s}\comp \succ )\mathrel{=}(\alt{\Varid{j1}}{\Varid{j2}}\comp i_2\comp \conj{\Varid{g}}{\Varid{s}})\end{lcbr}}
+\just\equiv{ Comparando com a função do enunciado }
+%
+\ensuremath{\Varid{j}\mathrel{=}\alt{\underline{\mathrm{1}}}{\succ \comp \p2}}
+\qed
+\end{eqnarray*}
+
+
+Conclui-se então que:
+\begin{eqnarray*}
+\ensuremath{\conj{\Varid{g}}{\Varid{s}}\mathrel{=}\cata{\conj{\alt{\underline{\mathrm{1}}}{\Varid{mul}}}{\alt{\underline{\mathrm{1}}}{\succ \comp \p2}}}}
+\end{eqnarray*}
+
+Aplicando a Lei de \textit{Banana split}
+\begin{eqnarray*}
+\start
+\ensuremath{\cata{(\conj{\alt{\underline{\mathrm{1}}}{\Varid{mul}}}{\alt{\succ \comp \underline{\Varid{k}}}{\succ \comp \p2}}\mathbin{*}\conj{\alt{\underline{\mathrm{1}}}{\Varid{mul}}}{\alt{\underline{\mathrm{1}}}{\succ \comp \p2}})\comp \conj{\Varid{id}\mathbin{+}\p1}{\Varid{id}\mathbin{+}\p2}}}
+%
+\just\equiv{Absorção*, Fusão*, Absorção+, Natural-Id}
+\ensuremath{\cata{\conj{\conj{\alt{\underline{\mathrm{1}}}{\Varid{mul}\comp \p1}}{\alt{\succ \comp \underline{\Varid{k}}}{\succ \comp \p2\comp \p1}}}{\conj{\alt{\underline{\mathrm{1}}}{\Varid{mul}\comp \p2}}{\alt{\underline{\mathrm{1}}}{\succ \comp \p2\comp \p2}}}}}
+%
+\just\equiv{Lei da troca (x2)}
+\ensuremath{\cata{\alt{\conj{\conj{\underline{\mathrm{1}}}{\succ \comp \underline{\Varid{k}}}}{\conj{\underline{\mathrm{1}}}{\underline{\mathrm{1}}}}}{\conj{\conj{\Varid{mul}\comp \p1}{\succ \comp \p2\comp \p1}}{\conj{\conj{\Varid{mul}\comp \p2}{\cdot }}{\succ \comp \p2\comp \p2}}}}}
+%
+\just\equiv{\ensuremath{\mathsf{for}\ \Varid{b}\ \Varid{i}\mathrel{=}\cata{\alt{\underline{\Varid{i}}}{\Varid{b}}}}}
+%
+\ensuremath{\begin{lcbr}\Varid{i}\mathrel{=}\conj{\conj{\underline{\mathrm{1}}}{\succ \comp \underline{\Varid{k}}}}{\conj{\underline{\mathrm{1}}}{\underline{\mathrm{1}}}}\\\Varid{b}\mathrel{=}\conj{\conj{\Varid{mul}\comp \p1}{\succ \comp \p2\comp \p1}}{\conj{\conj{\Varid{mul}\comp \p2}{\cdot }}{\succ \comp \p2\comp \p2}}\end{lcbr}}
+\just\equiv{\ensuremath{\Varid{i}\;\Varid{k}\mathrel{=}(\mathrm{1},\succ \;\Varid{k},\mathrm{1},\mathrm{1})} }
+\end{eqnarray*}
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{base}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{base}\;\Varid{k}\mathrel{=}(\mathrm{1},\succ \;\Varid{k},\mathrm{1},\mathrm{1}){}\<[E]%
 \\
-\>[B]{}\Varid{loop}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{loop}\mathrel{=}\Varid{uncurr}\comp \conj{\conj{\Varid{mul}\comp \p1}{\succ \comp \p2\comp \p1}}{\conj{\Varid{mul}\comp \p2}{\succ \comp \p2\comp \p2}}\comp \Varid{curr}{}\<[E]%
+\\
+\>[B]{}\Varid{uncurr}\mathrel{=}(\lambda ((\Varid{a},\Varid{b}),(\Varid{c},\Varid{d}))\to (\Varid{a},\Varid{b},\Varid{c},\Varid{d})){}\<[E]%
+\\
+\>[B]{}\Varid{curr}\mathrel{=}(\lambda (\Varid{a},\Varid{b},\Varid{c},\Varid{d})\to ((\Varid{a},\Varid{b}),(\Varid{c},\Varid{d}))){}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
