@@ -1418,7 +1418,7 @@ sem entidades repetidas. Resultando assim tres catamorfismos compostos: \ensurem
     \ensuremath{\Conid{Blockchain}}
            \ar[d]_-{\ensuremath{\Varid{magic}\mathrel{=}\cata{\Varid{g}}}}
 &
-    \ensuremath{\Conid{Block}\mathbin{+}\Conid{Block}\mathbin{*}\Conid{Blockchain}}
+    \ensuremath{\Conid{Block}\mathbin{+}\Conid{Block}\times\Conid{Blockchain}}
            \ar[d]^{\ensuremath{\Varid{id}\mathbin{+}\Varid{id}\mathbin{*}\cata{\Varid{g}}}}
            \ar[l]_-{\ensuremath{\Varid{inBlockchain}}}
 \\
@@ -1480,12 +1480,24 @@ sem entidades repetidas. Resultando assim tres catamorfismos compostos: \ensurem
 \ColumnHook
 \end{hscode}\resethooks
 \subsubsection*{rotateQTree}
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{\Conid{QTree}\;\Conid{A}}
+           \ar[d]_-{\ensuremath{\Varid{rotateQTree}\mathrel{=}\cata{\Varid{g}}}}
+&
+    \ensuremath{(\Conid{A}\times(\Conid{Int}\times\Conid{Int}))\mathbin{+}(\Conid{A}\times(\Conid{Int},\Conid{Int}))\times(\Conid{QTree}\;\Conid{A})\;^4}
+           \ar[d]^{\ensuremath{\Varid{id}\mathbin{+}\cata{\Varid{g}}\;^4}}
+           \ar[l]_-{\ensuremath{\Varid{inQTree}}}
+\\
+    \ensuremath{\Conid{QTree}\;\Conid{A}}
+&
+    \ensuremath{(\Conid{A}\times(\Conid{Int}\times\Conid{Int}))\mathbin{+}(\Conid{A}\times(\Conid{Int},\Conid{Int}))\times(\Conid{QTree}\;\Conid{A})\;^4}
+           \ar[l]^-{\ensuremath{\Varid{g}\mathrel{=}\alt{\Varid{rotCell}}{\Varid{rotTrees}}}}
+}
+\end{eqnarray*}
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{8}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{26}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{34}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{rotateQTree}\mathrel{=}\Varid{cataQTree}\;\alt{\Varid{rotCell}}{\Varid{rotTrees}}\;\mathbf{where}{}\<[E]%
 \\
@@ -1494,18 +1506,53 @@ sem entidades repetidas. Resultando assim tres catamorfismos compostos: \ensurem
 \\
 \>[B]{}\hsindent{8}{}\<[8]%
 \>[8]{}\Varid{rotTrees}\;(\Varid{a},(\Varid{b},(\Varid{c},\Varid{d})))\mathrel{=}\Conid{Block}\;\Varid{c}\;\Varid{a}\;\Varid{d}\;\Varid{b}{}\<[E]%
-\\[\blanklineskip]%
+\ColumnHook
+\end{hscode}\resethooks
+\subsubsection*{scaleQTree}
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{\Conid{QTree}\;\Conid{A}}
+           \ar[d]_-{\ensuremath{\Varid{scaleQTree}\mathrel{=}\cata{\Varid{g}}}}
+&
+    \ensuremath{(\Conid{A}\times(\Conid{Int}\times\Conid{Int}))\mathbin{+}(\Conid{A}\times(\Conid{Int},\Conid{Int}))\times(\Conid{QTree}\;\Conid{A})\;^4}
+           \ar[d]^{\ensuremath{\Varid{id}\mathbin{+}\cata{\Varid{g}}\;^4}}
+           \ar[l]_-{\ensuremath{\Varid{inQTree}}}
+\\
+    \ensuremath{\Conid{QTree}\;\Conid{A}}
+&
+    \ensuremath{(\Conid{A}\times(\Conid{Int}\times\Conid{Int}))\mathbin{+}(\Conid{A}\times(\Conid{Int},\Conid{Int}))\times(\Conid{QTree}\;\Conid{A})\;^4}
+           \ar[l]^-{\ensuremath{\Varid{g}\mathrel{=}\alt{\Varid{scaleCell}}{\Varid{block}}}}
+}
+\end{eqnarray*}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{scaleQTree}\;\Varid{s}\mathrel{=}\Varid{cataQTree}\;\alt{\Varid{scaleCell}}{\Varid{block}}\;\mathbf{where}{}\<[E]%
 \\
 \>[B]{}\hsindent{9}{}\<[9]%
 \>[9]{}\Varid{scaleCell}\mathrel{=}\Varid{cell}\comp (\Varid{id}\times((\Varid{s}\mathbin{*})\times(\Varid{s}\mathbin{*}))){}\<[E]%
-\\[\blanklineskip]%
+\ColumnHook
+\end{hscode}\resethooks
+\subsubsection*{invertQTree}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{inPixel}\;(\Varid{r},(\Varid{g},(\Varid{b},\Varid{a})))\mathrel{=}\Conid{PixelRGBA8}\;\Varid{r}\;\Varid{g}\;\Varid{b}\;\Varid{a}{}\<[E]%
 \\
 \>[B]{}\Varid{outPixel}\;(\Conid{PixelRGBA8}\;\Varid{r}\;\Varid{g}\;\Varid{b}\;\Varid{a})\mathrel{=}(\Varid{r},(\Varid{g},(\Varid{b},\Varid{a}))){}\<[E]%
 \\
 \>[B]{}\Varid{invertQTree}\mathrel{=}\mathsf{fmap}\;(\Varid{inPixel}\comp ((\mathrm{255}\mathbin{-})\times((\mathrm{255}\mathbin{-})\times((\mathrm{255}\mathbin{-})\times\Varid{id})))\comp \Varid{outPixel}){}\<[E]%
-\\[\blanklineskip]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\subsubsection*{compressQTree}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{26}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{34}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{compressQTree}\;\Varid{n}\;\Varid{t}\mathrel{=}\Varid{anaQTree}\;(\Varid{seek}\comp \Varid{outP})\;((\Varid{depthQTree}\;\Varid{t})\mathbin{-}\Varid{n},\Varid{t})\;\mathbf{where}{}\<[E]%
 \\
 \>[B]{}\hsindent{9}{}\<[9]%
