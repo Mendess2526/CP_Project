@@ -43,7 +43,7 @@
 %format (anaA (f) (g)) = "\ana{" f "~" g "}_A"
 %format (cataB (f) (g)) = "\cata{" f "~" g "}_B"
 %format (anaB (f) (g)) = "\ana{" f "~" g "}_B"
-%format Either a b = a "+" b 
+%format Either a b = a "+" b
 %format fmap = "\mathsf{fmap}"
 %format NA   = "\textsc{na}"
 %format NB   = "\textsc{nb}"
@@ -63,6 +63,7 @@
 %format (cataBlockchainI (g)) = "\cata{" g "}"
 %format (cataQTreeI (g)) = "\cata{" g "}"
 %format (cataList (g)) = "\cata{" g "}"
+%format (anaFTreeI (f)) = "\ana{" f "}"
 %format Nat0 = "\N_0"
 %format muB = "\mu "
 %format (frac (n)(m)) = "\frac{" n "}{" m "}"
@@ -81,6 +82,7 @@
 %format .==. = "\equiv"
 %format .<=. = "\leq"
 %format power4 = "^4"
+%format power2 = "^2"
 
 %---------------------------------------------------------------------------
 
@@ -992,10 +994,10 @@ hyloBlockchain h g    = cataBlockchain h . anaBlockchain g
 \xymatrix@@C=4cm{
     |Blockchain|
            \ar[d]_-{|cataBlockchainI g|}
+           \ar[r]_-{|outBlockchain|}
 &
     |Block + Block * Blockchain|
            \ar[d]^{|id + id * (cataBlockchainI g)|}
-           \ar[l]_-{|inBlockchain|}
 \\
      |Transactions|
 &
@@ -1020,10 +1022,10 @@ sem entidades repetidas. Resultando assim tres catamorfismos compostos: |allTran
 \\
     |Transactions|
            \ar[d]_-{|cataList g|}
+           \ar[r]_-{|outList|}
 &
     |1 + Transaction >< Transactions|
            \ar[d]^{|id + id * (cataBlockchainI g)|}
-           \ar[l]_-{|inList|}
 \\
     |Ledger|
           \ar[d]_{|id|}
@@ -1033,10 +1035,10 @@ sem entidades repetidas. Resultando assim tres catamorfismos compostos: |allTran
 \\
     |Ledger|
         \ar[d]_-{|normL = cataList f|}
+        \ar[r]_-{|outList|}
 &
     |1 + (E >< V) >< Ledger|
         \ar[d]^{|id + id * (cataList f)|}
-        \ar[l]_-{|inList|}
 \\
     |Ledger|
 &
@@ -1059,10 +1061,10 @@ ledger = normL . (cataList (either nil (conc.(t2l >< id)))) . allTransactions
 \xymatrix@@C=4cm{
     |Blockchain|
            \ar[d]_-{|magic = cataBlockchainI g|}
+           \ar[r]_-{|outBlockchain|}
 &
     |Block + Block >< Blockchain|
            \ar[d]^{|id + id * (cataBlockchainI g)|}
-           \ar[l]_-{|inBlockchain|}
 \\
      |[MagicNo]|
            \ar[d]_-{|perfect|}
@@ -1105,14 +1107,14 @@ instance Functor QTree where
 \xymatrix@@C=2cm{
     |QTree A|
            \ar[d]_-{|rotateQTree = cataQTreeI g|}
+           \ar[r]_-{|outQTree|}
 &
-    |(A >< (Int >< Int)) + (A >< (Int, Int)) >< (QTree A) power4|
+    |(A >< (Int >< Int)) + (QTree A) power4|
            \ar[d]^{|id + (cataQTreeI g) power4|}
-           \ar[l]_-{|inQTree|}
 \\
     |QTree A|
 &
-    |(A >< (Int >< Int)) + (A >< (Int, Int)) >< (QTree A) power4|
+    |(A >< (Int >< Int)) + (QTree A) power4|
            \ar[l]^-{|g = either rotCell rotTrees|}
 }
 \end{eqnarray*}
@@ -1127,14 +1129,14 @@ rotateQTree = cataQTree (either rotCell rotTrees) where
 \xymatrix@@C=2cm{
     |QTree A|
            \ar[d]_-{|scaleQTree = cataQTreeI g|}
+           \ar[r]_-{|outQTree|}
 &
-    |(A >< (Int >< Int)) + (A >< (Int, Int)) >< (QTree A) power4|
-           \ar[d]^{|id + (cataQTreeI g) power4|}
-           \ar[l]_-{|inQTree|}
+    |(A >< (Int >< Int)) + (QTree A) power4|
+           \ar[d]^{|(id >< id) + (cataQTreeI g) power4|}
 \\
     |QTree A|
 &
-    |(A >< (Int >< Int)) + (A >< (Int, Int)) >< (QTree A) power4|
+    |(A >< (Int >< Int)) + (QTree A) power4|
            \ar[l]^-{|g = either scaleCell block|}
 }
 \end{eqnarray*}
@@ -1396,14 +1398,14 @@ Aplicando a Lei de \textit{Banana split}
 |cataNat (split (split (either (const 1) (mul.p1)) (either (succ.(const k)) (succ.p2.p1)))  (split (either (const 1) (mul.p2))  (either (const 1) (succ.p2.p2))))|
 %
 \just\equiv{Lei da troca (x2)}
-|cataNat (either (split (split (const 1) (succ.(const k))) (split (const 1) (const 1)))  (split (split (mul.p1) (succ.p2.p1)) (split (split (mul.p2)) (succ.p2.p2)))  )|
+|cataNat (either (split (split (const 1) (succ.(const k))) (split (const 1) (const 1)))  (split (split (mul.p1) (succ.p2.p1)) (split (mul.p2) (succ.p2.p2)))  )|
 %
 \just\equiv{|for b i = cataNat (either (const i) b)|}
 %
 |lcbr(
    i = (split (split (const 1) (succ.(const k))) (split (const 1) (const 1)))
 )(
-   b = (split (split (mul.p1) (succ.p2.p1)) (split (split (mul.p2)) (succ.p2.p2)))
+   b = (split (split (mul.p1) (succ.p2.p1)) (split (mul.p2) (succ.p2.p2)))
 )|
 \just\equiv{|i k  =  (1, succ k, 1, 1)| }
 \end{eqnarray*}
@@ -1434,6 +1436,26 @@ instance Bifunctor FTree where
 \end{code}
 
 \subsubsection*{generatePTree}
+\begin{eqnarray*}
+\xymatrix@@C=3cm{
+&
+    |PTree|
+&
+    |Square + Square >< FTree power2|
+        \ar[l]_-{|inT|}
+\\
+    |Nat0|
+        \ar[r]_-{|split id (const 1)|}
+        \ar[ur]^-{|generatePTree  |}
+&
+    |Nat0 >< Square|
+        \ar[r]_-{|f = plant.distl.(outNat >< id)|}
+        \ar[u]^-{|anaFTreeI f|}
+&
+    |Square + Square >< (Nat0 >< Square) power2|
+        \ar[u]_-{|id + id >< (anaFTree f)|}
+}
+\end{eqnarray*}
 \begin{code}
 generatePTree = anaFTree (plant.distl.(outNat >< id)) . (split id (const 1)) where
     plant = p2 -|- (split p2 (split (id >< pitag) (id >< pitag)))
