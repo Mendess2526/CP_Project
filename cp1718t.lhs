@@ -69,6 +69,7 @@
 %format (frac (n)(m)) = "\frac{" n "}{" m "}"
 %format (fac (n)) = "{" n "!}"
 %format (underbrace (t) (p)) = "\underbrace{" t "}_{" p "}"
+%format (cond (p) (f) (g)) = (p) " \to " f "," g
 %format matrix = "matrix"
 %format (bin (n) (k)) = "\Big(\vcenter{\xymatrix@R=1pt{" n "\\" k "}}\Big)"
 %format `ominus` = "\mathbin{\ominus}"
@@ -990,6 +991,9 @@ anaBlockchain h       = inBlockchain . recBlockchain (anaBlockchain h) . h
 hyloBlockchain h g    = cataBlockchain h . anaBlockchain g
 \end{code}
 \subsubsection*{All Transactions}
+\begin{code}
+allTransactions = cataBlockchain (either (p2.p2) (conc.((p2.p2) >< id)))
+\end{code}
 \begin{eqnarray*}
 \xymatrix@@C=4cm{
     |Blockchain|
@@ -1005,15 +1009,18 @@ hyloBlockchain h g    = cataBlockchain h . anaBlockchain g
            \ar[l]^-{|g = either (p2.p2) (conc.((p2.p2) >< id))|}
 }
 \end{eqnarray*}
-\begin{code}
-allTransactions = cataBlockchain (either (p2.p2) (conc.((p2.p2) >< id)))
-\end{code}
 
 \subsubsection*{Ledger}
 A implementação deste programa passa por duas partes, apos obter todas as transações (|allTransactions|). Primeiro obtem-se uma ledger
 não normalizada, isto é, uma ledger em que a mesma entidade aparece mais do que uma vez, de seguida normaliza-se esta para que fique
 sem entidades repetidas. Resultando assim tres catamorfismos compostos: |allTransactions|, |cataBlockchainI (either nil (conc.(t2l >< id)))| e
 |normL|.
+
+\begin{code}
+ledger = normL . (cataList (either nil (conc.(t2l >< id)))) . allTransactions
+
+t2l (f,(v,t)) = [(f,-v),(t,v)]
+\end{code}
 \begin{eqnarray*}
 \xymatrix@@C=4cm{
     |Blockchain|
@@ -1046,6 +1053,15 @@ sem entidades repetidas. Resultando assim tres catamorfismos compostos: |allTran
         \ar[l]^-{|f = either nil nrm|}
 }
 \end{eqnarray*}
+\begin{code}
+normL = cataList (either nil (cons.(uncurry nrm))) where
+        nrm entity = cataList (either f g) where
+            f = split (const entity) nil
+            g = cond ((uncurry (==)).(p1 >< p1.p1)) addE carryE where
+                addE   ((e,v),((et,vt),t)) = ((et,v+vt),t)
+                carryE ((e,v),((et,vt),t)) = ((et,vt),(e,v):t)
+
+\end{code}
 \begin{eqnarray*}
 \xymatrix@@C=4cm{
     |Ledger|
@@ -1061,20 +1077,15 @@ sem entidades repetidas. Resultando assim tres catamorfismos compostos: |allTran
         \ar[l]^-{|either (split (const entity) nil) (cond ((uncurry (==)).(p1 >< p1.p1)) addE carryE)|}
 }
 \end{eqnarray*}
-\begin{code}
-
-normL = cataList (either nil (cons.(uncurry nrm))) where
-        nrm entity = cataList (either f g) where
-            f = split (const entity) nil
-            g = cond ((uncurry (==)).(p1 >< p1.p1)) addE carryE where
-                addE   ((e,v),((et,vt),t)) = ((et,v+vt),t)
-                carryE ((e,v),((et,vt),t)) = ((et,vt),(e,v):t)
-
-t2l (f,(v,t)) = [(f,-v),(t,v)]
-
-ledger = normL . (cataList (either nil (conc.(t2l >< id)))) . allTransactions
-\end{code}
 \subsubsection*{isValidMagicNr}
+\begin{code}
+magic = cataBlockchain (either (singl.p1) (cons.(p1 >< id)))
+
+perfect = (either true (and.cons.(split (uncurry notElem) (singl.perfect.p2)))).outList
+
+isValidMagicNr = perfect.magic
+
+\end{code}
 \begin{eqnarray*}
 \xymatrix@@C=4cm{
     |Blockchain|
@@ -1093,15 +1104,6 @@ ledger = normL . (cataList (either nil (conc.(t2l >< id)))) . allTransactions
      |Bool|
 }
 \end{eqnarray*}
-\begin{code}
-magic = cataBlockchain (either (singl.p1) (cons.(p1 >< id)))
-
-perfect = (either true (and.cons.(split (uncurry notElem) (singl.perfect.p2)))).outList
-
-isValidMagicNr = perfect.magic
-
-\end{code}
-
 
 \subsection*{Problema 2}
 \subsubsection*{Definições base}
@@ -1121,6 +1123,11 @@ instance Functor QTree where
     fmap f = cataQTree ( inQTree . baseQTree f id)
 \end{code}
 \subsubsection*{rotateQTree}
+\begin{code}
+rotateQTree = cataQTree (either rotCell rotTrees) where
+       rotCell = cell.(id >< swap)
+       rotTrees (a, (b, (c, d))) = Block c a d b
+\end{code}
 \begin{eqnarray*}
 \xymatrix@@C=2cm{
     |QTree A|
@@ -1136,13 +1143,11 @@ instance Functor QTree where
            \ar[l]^-{|g = either rotCell rotTrees|}
 }
 \end{eqnarray*}
-\begin{code}
-rotateQTree = cataQTree (either rotCell rotTrees) where
-       rotCell = cell.(id >< swap)
-       rotTrees (a, (b, (c, d))) = Block c a d b
-
-\end{code}
 \subsubsection*{scaleQTree}
+\begin{code}
+scaleQTree s = cataQTree (either scaleCell block) where
+        scaleCell = cell.(id >< ((s*) >< (s*)))
+\end{code}
 \begin{eqnarray*}
 \xymatrix@@C=2cm{
     |QTree A|
@@ -1158,11 +1163,6 @@ rotateQTree = cataQTree (either rotCell rotTrees) where
            \ar[l]^-{|g = either scaleCell block|}
 }
 \end{eqnarray*}
-\begin{code}
-scaleQTree s = cataQTree (either scaleCell block) where
-        scaleCell = cell.(id >< ((s*) >< (s*)))
-
-\end{code}
 \subsubsection*{invertQTree}
 \begin{code}
 inPixel (r,(g,(b,a))) = PixelRGBA8 r g b a
@@ -1178,11 +1178,11 @@ compressQTree n t = anaQTree (seek.outP) ((depthQTree t) - n, t) where
         outP (n,a)       | n < 1 = i1 (i1 ((),a))
         outP (n,(Cell a x y))    = i1 (i2 (n, (a,(x,y))))
         outP (n,(Block a b c d)) = i2 (pred n, (a,(b,(c,d))))
-        destroy = cataQTree (either id (avgPixel.pair2list))
-        pair2list (a,(b,(c,d))) = [a,b,c,d]
 
-avgPixel = split avgColor avgSize where
-        avgColor = p1.head -- escolhe a primeira porque não tenho maneira de fazer a media
+destroy :: QTree a -> (a, (Int, Int))
+destroy = cataQTree (either id ((split avgColor avgSize).pair2list)) where
+        pair2list (a,(b,(c,d))) = [a,b,c,d]
+        avgColor = p1.head -- escolhe a primeira por não ser possivel determinar o valor medio.
         avgSize = ((`div`2) >< (`div`2)).(foldr (\(x1,y1) (x2,y2) -> (x1 + x2,y1 + y2)) (0,0)).(map p2)
 \end{code}
 \subsubsection*{outlineQTree}
@@ -1454,6 +1454,11 @@ instance Bifunctor FTree where
 \end{code}
 
 \subsubsection*{generatePTree}
+\begin{code}
+generatePTree = anaFTree (plant.distl.(outNat >< id)) . (split id (const 1)) where
+    plant = p2 -|- (split p2 (split (id >< pitag) (id >< pitag)))
+    pitag = (((sqrt 2) / 2) *)
+\end{code}
 \begin{eqnarray*}
 \xymatrix@@C=3cm{
 &
@@ -1474,11 +1479,6 @@ instance Bifunctor FTree where
         \ar[u]_-{|id + id >< (anaFTree f)|}
 }
 \end{eqnarray*}
-\begin{code}
-generatePTree = anaFTree (plant.distl.(outNat >< id)) . (split id (const 1)) where
-    plant = p2 -|- (split p2 (split (id >< pitag) (id >< pitag)))
-    pitag = (((sqrt 2) / 2) *)
-\end{code}
 
 \subsubsection*{drawPTree}
 \begin{code}
