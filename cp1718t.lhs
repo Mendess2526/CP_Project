@@ -1050,7 +1050,7 @@ t2l (f,(v,t)) = [(f,-v),(t,v)]
     |Ledger|
 &
     |1 + (E >< V) >< Ledger|
-        \ar[l]^-{|f = either nil nrm|}
+        \ar[l]^-{|f = either nil (cons.(uncurry nrm))|}
 }
 \end{eqnarray*}
 \begin{code}
