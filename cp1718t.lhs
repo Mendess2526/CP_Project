@@ -685,7 +685,7 @@ derive as funções |base k| e |loop| que são usadas como auxiliares acima.
 \begin{propriedade}
 Verificação que |bin n k| coincide com a sua especificação (\ref{eq:bin}):
 \begin{code}
-prop3 n k = (bin n k) == (fac n) % (fac k * (fac ((n-k))))
+prop3 (NonNegative n) (NonNegative k) = k <= n ==> (bin n k) == (fac n) % (fac k * (fac ((n-k))))
 \end{code}
 \end{propriedade}
 
@@ -1008,7 +1008,7 @@ allTransactions = cataBlockchain (either (p2.p2) (conc.((p2.p2) >< id)))
            \ar[r]_-{|outT|}
 &
     |Block + Block >< Blockchain|
-           \ar[d]^{|id + id * (cataBlockchainI g)|}
+           \ar[d]^-{|id + id >< (cataBlockchainI g)|}
 \\
      |Transactions|
 &
@@ -1018,7 +1018,7 @@ allTransactions = cataBlockchain (either (p2.p2) (conc.((p2.p2) >< id)))
 \end{eqnarray*}
 
 \subsubsection*{Ledger}
-A implementação deste programa passa por duas etapas após obter todas as transações (|allTransactions|). Primeiro, obtém-se uma ledger
+A implementação desta função passa por duas etapas, após obter todas as transações (|allTransactions|). Primeiro, obtém-se uma ledger
 não normalizada, isto é, uma lista de todos os movimentos, de seguida normaliza-se esta para que fique sem entidades repetidas.
 Resultando assim, três catamorfismos compostos: |allTransactions|, |cataBlockchainI (either nil (conc.(t2l >< id)))| e |normL|.
 
@@ -1059,13 +1059,12 @@ t2l (f,(v,t)) = [(f,-v),(t,v)]
         \ar[l]^-{|f = either nil (cons.(uncurry nrm))|}
 }
 \end{eqnarray*}
+A função |normL| invoca também um catamorfismo em cada iteração, |nrm|.
 \begin{code}
 normL = cataList (either nil (cons.(uncurry nrm))) where
-        nrm entity = cataList (either f g) where
-            f = split (const entity) nil
-            g = cond ((uncurry (==)).(p1 >< p1.p1)) addE carryE where
-                addE   ((e,v),((et,vt),t)) = ((et,v+vt),t)
-                carryE ((e,v),((et,vt),t)) = ((et,vt),(e,v):t)
+        nrm entity = cataList (either (split (const entity) nil) (cond ((uncurry (==)).(p1 >< p1.p1)) addE carryE)) where
+            addE   ((e,v),((et,vt),t)) = ((et,v+vt),t)
+            carryE ((e,v),((et,vt),t)) = ((et,vt),(e,v):t)
 
 \end{code}
 \begin{eqnarray*}
@@ -1500,9 +1499,9 @@ Aplicando a Lei de \textit{Banana split}
 
 \begin{code}
 base k = (1, succ k, 1, 1)
-loop = uncurr . (split (split (mul.p1) (succ.p2.p1)) (split (mul.p2) (succ.p2.p2))) . curr
-uncurr = (\((a,b),(c,d)) -> (a,b,c,d))
-curr = (\(a,b,c,d) -> ((a,b),(c,d)))
+loop = toQuad . (split (split (mul.p1) (succ.p2.p1)) (split (mul.p2) (succ.p2.p2))) . fromQuad
+toQuad = (\((a,b),(c,d)) -> (a,b,c,d))
+fromQuad = (\(a,b,c,d) -> ((a,b),(c,d)))
 \end{code}
 
 \subsection*{Problema 4}
