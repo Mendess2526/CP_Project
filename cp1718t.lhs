@@ -1146,6 +1146,8 @@ instance Functor QTree where
     fmap f = cataQTree ( inQTree . baseQTree f id)
 \end{code}
 \subsubsection*{rotateQTree}
+Para efetuar uma rotação de $90º$ realizamos um catamorfismo simples que troca as coordenadas da folhas, |rotCell|, e troca a ordem dos ramos de cada
+bloco, |rotTrees|.
 \begin{code}
 rotateQTree = cataQTree (either rotCell rotTrees) where
        rotCell = cell.(id >< swap)
@@ -1167,6 +1169,8 @@ rotateQTree = cataQTree (either rotCell rotTrees) where
 }
 \end{eqnarray*}
 \subsubsection*{scaleQTree}
+Para redimensionar uma imagem é apenas necessario alterar redimensionar as submatrizes. Logo, apenas temos de alterar as coordenadas
+em cada |Cell| da árvore.
 \begin{code}
 scaleQTree s = cataQTree (either scaleCell block) where
         scaleCell = cell.(id >< ((s*) >< (s*)))
@@ -1187,6 +1191,8 @@ scaleQTree s = cataQTree (either scaleCell block) where
 }
 \end{eqnarray*}
 \subsubsection*{invertQTree}
+Para inverter as cores da imagem é apenas necessario inverter as cores de cada |Cell| da árvore. Para isto usamos um |fmap| devido a
+|QTree| ser instancia de |Functor|.
 \begin{code}
 inPixel (r,(g,(b,a))) = PixelRGBA8 r g b a
 outPixel (PixelRGBA8 r g b a) = (r,(g,(b,a)))
@@ -1194,6 +1200,8 @@ invertQTree = fmap (inPixel.((255-) >< ((255-) >< ((255-) >< id))).outPixel)
 \end{code}
 
 \subsubsection*{compressQTree}
+Para comprimir uma imagem temos de fazer "prune" da àrvore, para resolver este problema usamos um anamorfismo que irá procurar os niveis da
+àrvore que tem de ser comprimidos, sempre que atinge um destes invoca um catamorfismo que reduz um |Block| a uma |Cell| (|destroy|).
 \begin{code}
 compressQTree n = (anaQTree (seek.outP)).(((subtract n).depthQTree) >< id).dup where
         seek = ((either (destroy.p2) p2) -|- spreadlove)
@@ -1246,6 +1254,8 @@ destroy = cataQTree (either id ((split avgColor avgSize).pair2list)) where
 \end{eqnarray*}
 
 \subsubsection*{outlineQTree}
+Para colocar um malha poligonal contida na imagem reaproveitamos o catamorfismo definido previamente que converte uma árvore numa
+matriz, |qt2bm|, alterando, apenas, a função que determina o preenchimento de cada matriz.
 \begin{code}
 outlineQTree b = cataQTree (either f g) where
         f (k,(i,j)) = matrix j i (if b k then outl j i else false)
