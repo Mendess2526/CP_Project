@@ -123,7 +123,7 @@ a79003 & Pedro Mendes Félix da Costa
 \\
 a80453 & Bárbara Andreia Cardoso Ferreira
 \\
-a33333 & Nome3 (preencher)
+a79987 & Ana Rita de Sousa e Castro Guimarães
 \end{tabular}
 \end{center}
 
