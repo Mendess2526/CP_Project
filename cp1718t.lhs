@@ -1146,7 +1146,7 @@ instance Functor QTree where
     fmap f = cataQTree ( inQTree . baseQTree f id)
 \end{code}
 \subsubsection*{rotateQTree}
-Para efetuar uma rotação de $90º$ realizamos um catamorfismo simples que troca as coordenadas da folhas, |rotCell|, e um que troca a ordem dos ramos de cada
+Para efetuar uma rotação de $90º$ realizamos um catamorfismo simples que troca as coordenadas da folhas, |rotCell|, e a ordem dos ramos de cada
 bloco, |rotTrees|.
 \begin{code}
 rotateQTree = cataQTree (either rotCell rotTrees) where
