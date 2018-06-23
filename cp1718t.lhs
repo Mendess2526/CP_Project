@@ -1016,9 +1016,9 @@ allTransactions = cataBlockchain (either (p2.p2) (conc.((p2.p2) >< id)))
 \end{eqnarray*}
 
 \subsubsection*{Ledger}
-A implementação deste programa passa por duas partes, apos obter todas as transações (|allTransactions|). Primeiro obtem-se uma ledger
+A implementação deste programa passa por duas etapas após obter todas as transações (|allTransactions|). Primeiro, obtém-se uma ledger
 não normalizada, isto é, uma lista de todos os movimentos, de seguida normaliza-se esta para que fique sem entidades repetidas.
-Resultando assim tres catamorfismos compostos: |allTransactions|, |cataBlockchainI (either nil (conc.(t2l >< id)))| e |normL|.
+Resultando assim, três catamorfismos compostos: |allTransactions|, |cataBlockchainI (either nil (conc.(t2l >< id)))| e |normL|.
 
 \begin{code}
 ledger = normL . (cataList (either nil (conc.(t2l >< id)))) . allTransactions
