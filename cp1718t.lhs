@@ -996,7 +996,7 @@ anaBlockchain h       = inBlockchain . recBlockchain (anaBlockchain h) . h
 hyloBlockchain h g    = cataBlockchain h . anaBlockchain g
 \end{code}
 \subsubsection*{All Transactions}
-Para obter todas as transações apenas é necessário fazer um catamorfismo sobre a |Blockchain| de forma a obter o 3º elemento de cada
+Para obter todas as transações é apenas necessário fazer um catamorfismo sobre a |Blockchain|, de forma a obter o 3º elemento de cada
 |Block|.
 \begin{code}
 allTransactions = cataBlockchain (either (p2.p2) (conc.((p2.p2) >< id)))
@@ -1084,9 +1084,9 @@ normL = cataList (either nil (cons.(uncurry nrm))) where
 }
 \end{eqnarray*}
 \subsubsection*{isValidMagicNr}
-Para verificar se uma |Blockchain| tem apenas números magicos únicos, primeiro coleciona-mos todos os números da blockchain
-numa lista, atravez do catamorfismo |magic|, e por fim realizamos um anamorfismo para verificar se esta lista não tem números repetidos, |perfect|.
-Para que este anamorfismo fosse possivel de implementar foi necessaria a existencia de um |inT| de |Bool| e do proprio anamorfismo, |anaBool|.
+Para verificar se uma |Blockchain| tem apenas números magicos únicos, como primeira etapa, coleciona-mos todos os números da blockchain
+numa lista através do catamorfismo, |magic|, e por fim realizamos um anamorfismo para verificar se esta lista não tem números repetidos, |perfect|.
+Para que este anamorfismo seja possível de implementar é necessária a existência de um |inT| de |Bool| e do próprio anamorfismo, |anaBool|.
 \begin{code}
 magic = cataBlockchain (either (singl.p1) (cons.(p1 >< id)))
 
