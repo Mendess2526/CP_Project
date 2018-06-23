@@ -64,6 +64,9 @@
 %format (cataQTreeI (g)) = "\cata{" g "}"
 %format (cataList (g)) = "\cata{" g "}"
 %format (anaFTreeI (f)) = "\ana{" f "}"
+%format (cataFTreeI (g)) = "\cata{" g "}"
+%format (subtract (n)) = "-"n
+%format listStar = "^*"
 %format Nat0 = "\N_0"
 %format muB = "\mu "
 %format (frac (n)(m)) = "\frac{" n "}{" m "}"
@@ -1095,10 +1098,10 @@ isValidMagicNr = perfect.magic
     |Block + Block >< Blockchain|
            \ar[d]^{|id + id >< (cataBlockchainI g)|}
 \\
-     |[MagicNo]|
+     |MagicNo listStar|
            \ar[d]_-{|perfect|}
 &
-     |Block + Block >< [MagicNo]|
+     |Block + Block >< MagicNo listStar|
            \ar[l]^-{|g = either (singl.p1) (cons.(p1 >< id))|}
 \\
      |Bool|
@@ -1172,7 +1175,7 @@ invertQTree = fmap (inPixel.((255-) >< ((255-) >< ((255-) >< id))).outPixel)
 
 \subsubsection*{compressQTree}
 \begin{code}
-compressQTree n t = anaQTree (seek.outP) ((depthQTree t) - n, t) where
+compressQTree n = (anaQTree (seek.outP)).(((subtract n).depthQTree) >< id).dup where
         seek = ((either (destroy.p2) p2) -|- spreadlove)
         spreadlove (n,(a,(b,(c,d)))) = ((n,a),((n,b),((n,c),(n,d))))
         outP (n,a)       | n < 1 = i1 (i1 ((),a))
@@ -1489,7 +1492,21 @@ drawPTree = cataFTree (either (singl.mksquare) trans) where
         movel = ((Translate (-(a / 2)) a).(Rotate (-45)))
         mover = ((Translate   (a / 2)  a).(Rotate   45 ))
 \end{code}
-
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |PTree A|
+           \ar[d]_-{|drawPTree = cataFTreeI g|}
+           \ar[r]_-{|outT|}
+&
+    |Square + Square >< (PTree) power2|
+           \ar[d]^{|(id >< id) + (cataFTree g) power2|}
+\\
+    |Picture listStar|
+&
+    |Square + Square >< Picture listStar power2|
+           \ar[l]^-{|g = either (singl.mksquare) trans|}
+}
+\end{eqnarray*}
 \subsection*{Problema 5}
 
 \begin{code}
