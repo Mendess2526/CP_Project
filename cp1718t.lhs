@@ -66,6 +66,7 @@
 %format (cataList (g)) = "\cata{" g "}"
 %format (anaFTreeI (f)) = "\ana{" f "}"
 %format (cataFTreeI (g)) = "\cata{" g "}"
+%format (anaBoolI (f)) = "\ana{" f "}"
 %format (subtract (n)) = "-"n
 %format listStar = "^*"
 %format Nat0 = "\N_0"
@@ -1016,9 +1017,8 @@ allTransactions = cataBlockchain (either (p2.p2) (conc.((p2.p2) >< id)))
 
 \subsubsection*{Ledger}
 A implementação deste programa passa por duas partes, apos obter todas as transações (|allTransactions|). Primeiro obtem-se uma ledger
-não normalizada, isto é, uma ledger em que a mesma entidade aparece mais do que uma vez, de seguida normaliza-se esta para que fique
-sem entidades repetidas. Resultando assim tres catamorfismos compostos: |allTransactions|, |cataBlockchainI (either nil (conc.(t2l >< id)))| e
-|normL|.
+não normalizada, isto é, uma lista de todos os movimentos, de seguida normaliza-se esta para que fique sem entidades repetidas.
+Resultando assim tres catamorfismos compostos: |allTransactions|, |cataBlockchainI (either nil (conc.(t2l >< id)))| e |normL|.
 
 \begin{code}
 ledger = normL . (cataList (either nil (conc.(t2l >< id)))) . allTransactions
@@ -1085,7 +1085,10 @@ normL = cataList (either nil (cons.(uncurry nrm))) where
 \begin{code}
 magic = cataBlockchain (either (singl.p1) (cons.(p1 >< id)))
 
-perfect = (either true (and.cons.(split (uncurry notElem) (singl.perfect.p2)))).outList
+inBool = either true (uncurry (&&))
+anaBool f = inBool . (id -|- (id >< (anaBool f))) . f
+
+perfect = anaBool ((id -|- (split (uncurry notElem) p2)).outList)
 
 isValidMagicNr = perfect.magic
 
@@ -1097,15 +1100,25 @@ isValidMagicNr = perfect.magic
            \ar[r]_-{|outT|}
 &
     |Block + Block >< Blockchain|
-           \ar[d]^{|id + id >< (cataBlockchainI g)|}
+           \ar[d]^-{|id + id >< (cataBlockchainI g)|}
 \\
-     |MagicNo listStar|
-           \ar[d]_-{|perfect|}
+    |MagicNo listStar|
+        \ar[d]_-{|id|}
 &
-     |Block + Block >< MagicNo listStar|
+    |Block + Block >< MagicNo listStar|
            \ar[l]^-{|g = either (singl.p1) (cons.(p1 >< id))|}
 \\
-     |Bool|
+    |MagicNo listStar|
+            \ar[d]_-{|perfect = anaBoolI f|}
+            \ar[r]^-{|f = (id + (split (uncurry notElem) p2)).outList|}
+&
+    |1 + Bool >< MagicNo listStar|
+            \ar[d]^-{|id + id >< anaBoolI f|}
+\\
+    |Bool|
+&
+    |1 + Bool >< Bool|
+            \ar[l]_-{|inT|}
 }
 \end{eqnarray*}
 
@@ -1159,7 +1172,7 @@ scaleQTree s = cataQTree (either scaleCell block) where
            \ar[r]_-{|outT|}
 &
     |(A >< (Int >< Int)) + (QTree A) power4|
-           \ar[d]^{|(id >< id) + (cataQTreeI g) power4|}
+           \ar[d]^{|id + (cataQTreeI g) power4|}
 \\
     |QTree A|
 &
@@ -1210,6 +1223,21 @@ destroy = cataQTree (either id ((split avgColor avgSize).pair2list)) where
         avgColor = p1.head -- escolhe a primeira por não ser possivel determinar o valor medio.
         avgSize = ((`div`2) >< (`div`2)).(foldr (\(x1,y1) (x2,y2) -> (x1 + x2,y1 + y2)) (0,0)).(map p2)
 \end{code}
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |QTree A|
+           \ar[d]_-{|destroy = cataQTreeI g|}
+           \ar[r]_-{|outT|}
+&
+    |(A >< (Int >< Int)) + (QTree A) power4|
+           \ar[d]^-{|id + (cataQTreeI g) power4|}
+\\
+    |A >< (Int >< Int)|
+&
+    |(A >< (Int >< Int)) + ((A >< (Int >< Int)) power4|
+           \ar[l]^-{|g = either id ((split avgColor avgSize).pair2list)|}
+}
+\end{eqnarray*}
 
 \subsubsection*{outlineQTree}
 \begin{code}
@@ -1486,7 +1514,7 @@ generatePTree = anaFTree (plant.distl.(outNat >< id)) . (split id (const 1)) whe
     pitag = (((sqrt 2) / 2) *)
 \end{code}
 \begin{eqnarray*}
-\xymatrix@@C=3cm{
+\xymatrix@@C=2.5cm{
 &
     |PTree|
 &
@@ -1495,7 +1523,7 @@ generatePTree = anaFTree (plant.distl.(outNat >< id)) . (split id (const 1)) whe
 \\
     |Nat0|
         \ar[r]_-{|split id (const 1)|}
-        \ar[ur]^-{|generatePTree  |}
+        \ar[ur]^-{|generatePTree|}
 &
     |Nat0 >< Square|
         \ar[r]_-{|f = plant.distl.(outNat >< id)|}
@@ -1522,7 +1550,7 @@ drawPTree = cataFTree (either (singl.mksquare) trans) where
            \ar[r]_-{|outT|}
 &
     |Square + Square >< (PTree) power2|
-           \ar[d]^{|(id >< id) + (cataFTree g) power2|}
+           \ar[d]^{|id + id >< (cataFTree g) power2|}
 \\
     |Picture listStar|
 &
@@ -1534,10 +1562,9 @@ drawPTree = cataFTree (either (singl.mksquare) trans) where
 
 \begin{code}
 singletonbag = B . singl . split id (const 1)
-muB = B . concat . (fmap ((\ (a,b) -> map (id >< (*b)) a))) . unB . (fmap unB)
-dist a = (D . (fmap (id >< ((/tot).fromIntegral) )) . unB) a where
-    tot = fromIntegral $ numberM a
-    numberM = (cataList (either (const 0) ((uncurry (+)).(p2 >< id)))) . unB
+muB = B . concat . (fmap ((\(a,b) -> map (id >< (b*)) a))) . unB . (fmap unB)
+dist a = (D . (map (id >< ((/total).fromIntegral))) . unB) a where
+    total = (fromIntegral . (foldr ((+).p2) 0) . unB) a
 \end{code}
 
 \section{Como exprimir cálculos e diagramas em LaTeX/lhs2tex}
