@@ -116,7 +116,7 @@
 \\\hline
 a79003 & Pedro Mendes Félix da Costa
 \\
-a22222 & Nome2 (preencher)
+a80453 & Bárbara Andreia Cardoso Ferreira
 \\
 a33333 & Nome3 (preencher)
 \end{tabular}
@@ -1000,7 +1000,7 @@ allTransactions = cataBlockchain (either (p2.p2) (conc.((p2.p2) >< id)))
            \ar[d]_-{|cataBlockchainI g|}
            \ar[r]_-{|outT|}
 &
-    |Block + Block * Blockchain|
+    |Block + Block >< Blockchain|
            \ar[d]^{|id + id * (cataBlockchainI g)|}
 \\
      |Transactions|
@@ -1185,6 +1185,21 @@ destroy = cataQTree (either id ((split avgColor avgSize).pair2list)) where
         avgColor = p1.head -- escolhe a primeira por não ser possivel determinar o valor medio.
         avgSize = ((`div`2) >< (`div`2)).(foldr (\(x1,y1) (x2,y2) -> (x1 + x2,y1 + y2)) (0,0)).(map p2)
 \end{code}
+
+\begin{eqnarray*}
+\xymatrix@@C=3cm{
+    |QTree|
+&
+    |(A >< (Int >< Int)) + (QTree A) power4|
+        \ar[l]_-{|inT|}
+\\
+
+    |QTree|
+&
+    |(A >< (Int >< Int)) + (QTree A) power4|
+       
+}
+\end{eqnarray*}
 \subsubsection*{outlineQTree}
 \begin{code}
 outlineQTree b = cataQTree (either f g) where
