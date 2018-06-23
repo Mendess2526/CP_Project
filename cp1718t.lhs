@@ -62,6 +62,7 @@
 %format (cataNat (g)) = "\cata{" g "}"
 %format (cataBlockchainI (g)) = "\cata{" g "}"
 %format (cataQTreeI (g)) = "\cata{" g "}"
+%format (anaQTreeI (f)) = "\ana{" f "}"
 %format (cataList (g)) = "\cata{" g "}"
 %format (anaFTreeI (f)) = "\ana{" f "}"
 %format (cataFTreeI (g)) = "\cata{" g "}"
@@ -1183,18 +1184,23 @@ compressQTree n = (anaQTree (seek.outP)).(((subtract n).depthQTree) >< id).dup w
         outP (n,(Block a b c d)) = i2 (pred n, (a,(b,(c,d))))
 \end{code}
 \begin{eqnarray*}
-\xymatrix@@C=3cm{
+\xymatrix@@C=2.5cm{
+&
     |QTree|
 &
     |(A >< (Int >< Int)) + (QTree A) power4|
         \ar[l]^-{|inT|}
 \\
-    |QTree|
-        \ar[u]^-{|compressQTree|}
-        \ar[r]_-{|seek.outP|}
+    |Int >< QTree|
+        \ar[r]_-{|((subtract n).depthQTree >< id).dup|}
+        \ar[ur]^-{|compressQTree|}
 &
-    |(A >< (Int >< Int)) + (QTree A) power4|
-        \ar[u]_-{|id + compressQTree|}
+    |Int >< QTree|
+        \ar[u]^-{|anaQTreeI f|}
+        \ar[r]_-{|f = seek.outP|}
+&
+    |(A >< (Int >< Int)) + (Int >< QTree A) power4|
+        \ar[u]_-{|id + anaQTreeI f power4|}
 }
 \end{eqnarray*}
 \begin{code}
