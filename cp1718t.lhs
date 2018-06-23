@@ -1524,6 +1524,8 @@ instance Bifunctor FTree where
 \end{code}
 
 \subsubsection*{generatePTree}
+Para gerar uma árvore de pitagoras implementamos um anamorfismo que parte de um par com o número de niveis e o tamanho do quadrado base.
+Como a |generatePTree| recebe apenas o número de niveis, temos de criar um par usando |(split id (const 1))|. %TODO isto podia ter mais qualquer coisa
 \begin{code}
 generatePTree = anaFTree (plant.distl.(outNat >< id)) . (split id (const 1)) where
     plant = p2 -|- (split p2 (split (id >< pitag) (id >< pitag)))
@@ -1551,6 +1553,9 @@ generatePTree = anaFTree (plant.distl.(outNat >< id)) . (split id (const 1)) whe
 \end{eqnarray*}
 
 \subsubsection*{drawPTree}
+Para desenhar uma árvore de pitagoras, usando a biblioteca \href{https://hackage.haskell.org/package/gloss}{gloss}, implementou-se um
+catamorfismo sobre a árvore que irá criar uma lista com os varios frames da "criação" da mesma, sendo que o ultimo elemento da lista é a
+arvore completa.
 \begin{code}
 drawPTree = cataFTree (either (singl.mksquare) trans) where
     mksquare = (uncurry rectangleSolid) . dup
