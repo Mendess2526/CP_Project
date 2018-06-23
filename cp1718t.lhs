@@ -7,7 +7,7 @@
 \usepackage{subcaption}
 \usepackage{adjustbox}
 %================= lhs2tex=====================================================%
-%include polycode.fmt 
+%include polycode.fmt
 %format (div (x)(y)) = x "\div " y
 %format succ = "\succ "
 %format ==> = "\Longrightarrow "
@@ -117,7 +117,7 @@
 
 \begin{center}\large
 \begin{tabular}{ll}
-\textbf{Grupo} nr. & 99 (preencher)
+\textbf{Grupo} nr. & 96
 \\\hline
 a79003 & Pedro Mendes Félix da Costa
 \\
