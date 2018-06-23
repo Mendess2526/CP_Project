@@ -1181,7 +1181,23 @@ compressQTree n = (anaQTree (seek.outP)).(((subtract n).depthQTree) >< id).dup w
         outP (n,a)       | n < 1 = i1 (i1 ((),a))
         outP (n,(Cell a x y))    = i1 (i2 (n, (a,(x,y))))
         outP (n,(Block a b c d)) = i2 (pred n, (a,(b,(c,d))))
-
+\end{code}
+\begin{eqnarray*}
+\xymatrix@@C=3cm{
+    |QTree|
+&
+    |(A >< (Int >< Int)) + (QTree A) power4|
+        \ar[l]^-{|inT|}
+\\
+    |QTree|
+        \ar[u]^-{|compressQTree|}
+        \ar[r]_-{|seek.outP|}
+&
+    |(A >< (Int >< Int)) + (QTree A) power4|
+        \ar[u]_-{|id + compressQTree|}
+}
+\end{eqnarray*}
+\begin{code}
 destroy :: QTree a -> (a, (Int, Int))
 destroy = cataQTree (either id ((split avgColor avgSize).pair2list)) where
         pair2list (a,(b,(c,d))) = [a,b,c,d]
@@ -1189,20 +1205,6 @@ destroy = cataQTree (either id ((split avgColor avgSize).pair2list)) where
         avgSize = ((`div`2) >< (`div`2)).(foldr (\(x1,y1) (x2,y2) -> (x1 + x2,y1 + y2)) (0,0)).(map p2)
 \end{code}
 
-\begin{eqnarray*}
-\xymatrix@@C=3cm{
-    |QTree|
-&
-    |(A >< (Int >< Int)) + (QTree A) power4|
-        \ar[l]_-{|inT|}
-\\
-
-    |QTree|
-&
-    |(A >< (Int >< Int)) + (QTree A) power4|
-       
-}
-\end{eqnarray*}
 \subsubsection*{outlineQTree}
 \begin{code}
 outlineQTree b = cataQTree (either f g) where
