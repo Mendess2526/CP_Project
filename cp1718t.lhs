@@ -1146,7 +1146,7 @@ instance Functor QTree where
     fmap f = cataQTree ( inQTree . baseQTree f id)
 \end{code}
 \subsubsection*{rotateQTree}
-Para efetuar uma rotação de $90º$ realizamos um catamorfismo simples que troca as coordenadas da folhas, |rotCell|, e troca a ordem dos ramos de cada
+Para efetuar uma rotação de $90º$ realizamos um catamorfismo simples que troca as coordenadas da folhas, |rotCell|, e um que troca a ordem dos ramos de cada
 bloco, |rotTrees|.
 \begin{code}
 rotateQTree = cataQTree (either rotCell rotTrees) where
@@ -1169,8 +1169,8 @@ rotateQTree = cataQTree (either rotCell rotTrees) where
 }
 \end{eqnarray*}
 \subsubsection*{scaleQTree}
-Para redimensionar uma imagem é apenas necessario alterar redimensionar as submatrizes. Logo, apenas temos de alterar as coordenadas
-em cada |Cell| da árvore.
+Para redimensionar uma imagem, pode-se redimensionar as submatrizes representadas pela árvore quaternária,
+logo, o catamorfismo tem que apenas multiplicar os dois inteiros (dimensões x e y) pelo fator de escala.
 \begin{code}
 scaleQTree s = cataQTree (either scaleCell block) where
         scaleCell = cell.(id >< ((s*) >< (s*)))
@@ -1191,8 +1191,8 @@ scaleQTree s = cataQTree (either scaleCell block) where
 }
 \end{eqnarray*}
 \subsubsection*{invertQTree}
-Para inverter as cores da imagem é apenas necessario inverter as cores de cada |Cell| da árvore. Para isto usamos um |fmap| devido a
-|QTree| ser instancia de |Functor|.
+Para inverter as cores da imagem é apenas necessário inverter as cores de cada |Cell| da árvore. Para isto, usamos um |fmap| devido a
+|QTree| ser instância de |Functor|.
 \begin{code}
 inPixel (r,(g,(b,a))) = PixelRGBA8 r g b a
 outPixel (PixelRGBA8 r g b a) = (r,(g,(b,a)))
@@ -1200,8 +1200,8 @@ invertQTree = fmap (inPixel.((255-) >< ((255-) >< ((255-) >< id))).outPixel)
 \end{code}
 
 \subsubsection*{compressQTree}
-Para comprimir uma imagem temos de fazer "prune" da àrvore, para resolver este problema usamos um anamorfismo que irá procurar os niveis da
-àrvore que tem de ser comprimidos, sempre que atinge um destes invoca um catamorfismo que reduz um |Block| a uma |Cell| (|destroy|).
+Para comprimir uma imagem temos de fazer "prune" da àrvore. Para resolver este problema, usamos um anamorfismo que irá procurar os níveis da
+árvore que têm de ser comprimidos e sempre que atinge um destes invoca um catamorfismo que reduz um |Block| a uma |Cell| (|destroy|).
 \begin{code}
 compressQTree n = (anaQTree (seek.outP)).(((subtract n).depthQTree) >< id).dup where
         seek = ((either (destroy.p2) p2) -|- spreadlove)
@@ -1524,8 +1524,8 @@ instance Bifunctor FTree where
 \end{code}
 
 \subsubsection*{generatePTree}
-Para gerar uma árvore de pitagoras implementamos um anamorfismo que parte de um par com o número de niveis e o tamanho do quadrado base.
-Como a |generatePTree| recebe apenas o número de niveis, temos de criar um par usando |(split id (const 1))|. %TODO isto podia ter mais qualquer coisa
+Para gerar uma árvore de pitágoras implementamos um anamorfismo que parte de um par com o número de níveis e o tamanho do quadrado base.
+Como a |generatePTree| recebe apenas o número de níveis, tivemos que criar um par usando |(split id (const 1))|.
 \begin{code}
 generatePTree = anaFTree (plant.distl.(outNat >< id)) . (split id (const 1)) where
     plant = p2 -|- (split p2 (split (id >< pitag) (id >< pitag)))
@@ -1553,9 +1553,9 @@ generatePTree = anaFTree (plant.distl.(outNat >< id)) . (split id (const 1)) whe
 \end{eqnarray*}
 
 \subsubsection*{drawPTree}
-Para desenhar uma árvore de pitagoras, usando a biblioteca \href{https://hackage.haskell.org/package/gloss}{gloss}, implementou-se um
-catamorfismo sobre a árvore que irá criar uma lista com os varios frames da "criação" da mesma, sendo que o ultimo elemento da lista é a
-arvore completa.
+Para desenhar uma árvore de pitágoras, usando a biblioteca \href{https://hackage.haskell.org/package/gloss}{gloss}, implementou-se um
+catamorfismo sobre a árvore, que irá criar uma lista com os vários frames da "criação" da mesma, sendo que o último elemento da lista é a
+árvore completa.
 \begin{code}
 drawPTree = cataFTree (either (singl.mksquare) trans) where
     mksquare = (uncurry rectangleSolid) . dup
