@@ -1085,7 +1085,7 @@ normL = cataList (either nil (cons.(uncurry nrm))) where
 \end{eqnarray*}
 \subsubsection*{isValidMagicNr}
 Para verificar se uma |Blockchain| tem apenas números magicos únicos, como primeira etapa, coleciona-mos todos os números da blockchain
-numa lista através do catamorfismo, |magic|, e por fim realizamos um anamorfismo para verificar se esta lista não tem números repetidos, |perfect|.
+numa lista através do catamorfismo |magic|, e por fim realizamos um anamorfismo para verificar se esta lista não tem números repetidos, |perfect|.
 Para que este anamorfismo seja possível de implementar é necessária a existência de um |inT| de |Bool| e do próprio anamorfismo, |anaBool|.
 \begin{code}
 magic = cataBlockchain (either (singl.p1) (cons.(p1 >< id)))
