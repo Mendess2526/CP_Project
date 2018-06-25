@@ -1000,6 +1000,7 @@ Para obter todas as transações é apenas necessário fazer um catamorfismo sob
 |Block|.
 \begin{code}
 allTransactions = cataBlockchain (either (p2.p2) (conc.((p2.p2) >< id)))
+mylength = anaNat ((id -|- p2).outList)
 \end{code}
 \begin{eqnarray*}
 \xymatrix@@C=4cm{
