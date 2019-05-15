@@ -1,7 +1,5 @@
 # CP_Project
 
-## ATENÇÂO: COMMITS QUE NÃO COMPILEM SERÃO REMOVIDOS
-
 ### Problema 1
 
 - [x] `allTransactions`
@@ -15,16 +13,18 @@
 - [x] `invertQTree`
 - [x] `compressQTree`  _da para melhorar_
 - [x] `outlineQTree`
+
 ### Problema 3
 
-- [ ] `base`
-- [ ] `loop`
-### Problema 4
+- [x] `base`
+- [x] `loop`
 
+### Problema 4
 - [x] `generatePTree`
-- [ ] `drawPTree` _começado_
+- [x] `drawPTree` _começado_
+
 ### Problema 5
 
-- [ ] `singletonbag`
-- [ ] `muB`
-- [ ] `dist`
+- [x] `singletonbag`
+- [x] `muB`
+- [x] `dist`
